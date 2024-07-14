@@ -35,44 +35,57 @@ def get_valid_input(prompt: str = 'Enter: ') -> str:
     return user_input
 
 
-def is_valid_password(password: str) -> bool:
+def is_valid_password(
+        password: str,
+        minimum_length: int = MINIMUM_LENGTH,
+        maximum_length: int = MAXIMUM_LENGTH,
+        require_uppercase: bool = LEAST_SPECIAL_CHAR_NUMBER,
+        require_lowercase: bool = LEAST_LOWERCASE_NUMBER,
+        require_special_chars: int = LEAST_SPECIAL_CHAR_NUMBER,
+        require_numbers: bool = LEAST_DIGIT_NUMBER,
+) -> bool:
     """
     Determine whether the provided password is valid.
     Returns True if the password is valid.
     Else returns False and display message.
     """
+    is_good_length: bool = (minimum_length <= len(password) <= maximum_length)
 
-    is_good_length:bool = (MINIMUM_LENGTH <= len(password) <= MAXIMUM_LENGTH)
     # re.findall(r'[A-Z]', password) returns a list of objects that are in uppercase
-    is_with_uppercase:bool = (len(re.findall(r'[A-Z]', password)) >= LEAST_UPPERCASE_NUMBER)
+    is_with_uppercase: bool = (len(re.findall(r'[A-Z]', password)) >= LEAST_UPPERCASE_NUMBER)
+
     # re.findall(r'[a-z]', password) returns a list of objects that are in lowercase
-    is_with_lowercase:bool = (len((re.findall(r'[a-z]', password))) >= LEAST_LOWERCASE_NUMBER)
+    is_with_lowercase: bool = (len((re.findall(r'[a-z]', password))) >= LEAST_LOWERCASE_NUMBER)
+
     # re.findall(r'[0-9]', password) returns a list of objects that are digits
-    is_with_digit:bool = (len(re.findall(r'[0-9]', password)) >= LEAST_DIGIT_NUMBER)
+    is_with_digit: bool = (len(re.findall(r'[0-9]', password)) >= LEAST_DIGIT_NUMBER)
+    if require_numbers and not is_with_digit:
+        print(f'- Require at least {LEAST_DIGIT_NUMBER} d1git')
+
     # re.findall(f'[{SPECIAL_CHARS}]', password) returns a list of objects that are with special characters
-    is_with_special_chars:bool = (len(re.findall(f'[{SPECIAL_CHARS}]', password)) >= LEAST_SPECIAL_CHAR_NUMBER)
+    is_with_special_chars: bool = (len(re.findall(f'[{SPECIAL_CHARS}]', password)) >= LEAST_SPECIAL_CHAR_NUMBER)
     # Give feedback of a bad password
-    if not (is_good_length and is_with_uppercase and is_with_lowercase and is_with_digit and is_with_special_chars):
-        error_textlines = []
-        # Check length
-        if len(password) < MINIMUM_LENGTH:
-            error_textlines.append(f'Short! Least {MINIMUM_LENGTH} chars short.')
-        elif len(password) > MAXIMUM_LENGTH:
-            error_textlines.append(f'Toooooooo loooooong! Password must be at most {MAXIMUM_LENGTH} characters long.')
-        # Check other conditions
-        if not is_with_uppercase:
-            error_textlines.append(f'- Require at least {LEAST_UPPERCASE_NUMBER} UPPERCASE LETTER')
-        if not is_with_lowercase:
-            error_textlines.append(f'- Require at least {LEAST_LOWERCASE_NUMBER} lowercase letter')
-        if not is_with_digit:
-            error_textlines.append(f'- Require at least {LEAST_DIGIT_NUMBER} d1git')
-        if not is_with_special_chars:
-            error_textlines.append(f'- Require at least {LEAST_SPECIAL_CHAR_NUMBER} $pec!al ch@racter')
-        # Show error messages
-        error_text = '\n'.join(error_textlines)
-        print(error_text)
-        return False
-    return True
+    is_valid = (
+            is_good_length and is_with_uppercase and is_with_lowercase and is_with_digit and is_with_special_chars
+    )
+
+    if not is_valid:
+        # Show password length issue
+        if not is_good_length:
+            if len(password) < MINIMUM_LENGTH:
+                print(f'Short! Least {minimum_length} chars short.')
+            elif len(password) > MAXIMUM_LENGTH:
+                print(f'Toooooooo loooooong! Password must be at most {maximum_length} characters long.')
+
+        if require_uppercase and not is_with_uppercase:
+            print(f'- Require at least {require_uppercase} UPPERCASE LETTER')
+
+        if require_lowercase and not is_with_lowercase:
+            print(f'- Require at least {LEAST_LOWERCASE_NUMBER} lowercase letter')
+
+        if require_special_chars and not is_with_special_chars:
+            print(f'- Require at least {LEAST_SPECIAL_CHAR_NUMBER} $pec!al ch@racter')
+    return is_valid
 
 
 def get_valid_password() -> str:

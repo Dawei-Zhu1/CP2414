@@ -5,8 +5,8 @@ By Zhu Dawei
 from password_generator import generate_valid_password
 from input_checking import get_valid_input, get_valid_password
 from file_process import read_user_database, save_user_database
-from encryption import to_encrypt, produce_salt
-from decryption import to_verify
+from encryption import encrypt_password, generate_salt
+from decryption import verify_password
 # Use json module to turn python dictionary into a widely-used data format
 import json
 
@@ -53,8 +53,8 @@ def main():
                 password_for_checking = get_valid_password()
 
             # Encryption
-            salt = produce_salt(0, 15)
-            password = to_encrypt(password_for_checking, salt)
+            salt = generate_salt(0, 15)
+            password = encrypt_password(password_for_checking, salt)
             user_database[username] = [password, salt]  # Put this record into database
             # The record is in the dictionary {username: [password, salt]}
             # Save the database
@@ -72,7 +72,7 @@ def main():
                 record = user_database[username]
                 actual_password = record[0]
                 salt = record[1]
-                decrypted_password = to_verify(password_for_verification, salt)
+                decrypted_password = verify_password(password_for_verification, salt)
                 if decrypted_password == actual_password:
                     print(f'Welcome, {username}')
                 else:
