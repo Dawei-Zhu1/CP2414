@@ -61,7 +61,7 @@ def main():
             save_user_database(USER_DATABASE_DIRECTORY, user_database)
             print(f'Thank you, {username}! Your account has been created successfully.')
 
-        if choice == CHOICE_LOGIN:  # When user wants to log in
+        elif choice == CHOICE_LOGIN:  # When user wants to log in
             with open(USER_DATABASE_DIRECTORY, 'r') as f:
                 user_database = json.load(f)
             # Ask user to input username and password
