@@ -5,7 +5,7 @@ By Zhu Dawei
 from password_generator import generate_valid_password
 from input_checking import get_valid_input, get_valid_password
 from file_process import read_user_database, save_user_database
-from encryption import encrypt_password, generate_salt
+from encryption import encrypt_password, generate_offset
 # from decryption import decrypt_password
 
 # Use json module to turn python dictionary into a widely-used data format
@@ -54,10 +54,10 @@ def main():
                 password_for_checking = get_valid_password()
 
             # Encryption
-            salt = generate_salt(0, 15)
-            password = encrypt_password(password_for_checking, salt)
-            user_database[username] = {'password': password, 'salt': salt}  # Put this record into database
-            # The record is in the dictionary {username: [password, salt]}
+            offset = generate_offset()
+            password = encrypt_password(password_for_checking, offset)
+            user_database[username] = {'password': password, 'offset': offset}  # Put this record into database
+            # The record is in the dictionary {username: [password, offset]}
             # Save the database
             save_user_database(USER_DATABASE_DIRECTORY, user_database)
             print(f'Thank you, {username}! Your account has been created successfully.')
@@ -70,9 +70,9 @@ def main():
             entered_password = get_valid_input('Enter your password: ')
             # Check whether the username exists in database records
             if username in user_database:
-                # Get salt from record then encrypt the entered password
+                # Get offset from record then encrypt the entered password with reversed offset
                 record = user_database[username]
-                password_to_verify = encrypt_password(entered_password, record['salt'])
+                password_to_verify = encrypt_password(entered_password, record['offset'])
                 if record['password'] == password_to_verify:
                     print(f'Welcome, {username}')
                 else:
