@@ -9,11 +9,11 @@ By Zhu Dawei
 import hashlib
 from password_generator import generate_random_string
 from input_checking import get_valid_input, is_valid_password
-from encryption import to_encrypt
+from encryption import encrypt_password
 import random
 
 
-def to_verify(raw_string, salt):
+def decrypt_password(raw_string, salt):
     """
     To get a string encrypted with the sha256 and salt.
     :param raw_string:
@@ -36,7 +36,7 @@ def main():
     password = string_hashed.hexdigest()
 
     text = input('Input this password or try something else: ')
-    string_hashed2 = to_verify(text, salt)
+    string_hashed2 = verify_password(text, salt)
     print(string_hashed2 == password)
 
 

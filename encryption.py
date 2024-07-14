@@ -10,8 +10,7 @@ import random
 import hashlib
 import rsa
 
-
-private_key ,public_key = rsa.newkeys(16)
+private_key, public_key = rsa.newkeys(16)
 print(private_key, public_key)
 
 
@@ -29,14 +28,13 @@ def to_encrypt_rsa(raw_string: str, public_key):
     return cipher_string
 
 
-
-def to_encrypt(raw_string, salt):
+def encrypt_password(raw_string, salt):
     """
     To get a string encrypted with the sha256 and salt.
     :param raw_string:
     :param salt:
     :return:
-    """    
+    """
     # salt = produce_salt(0, 1)
     string_hashed = hashlib.sha256(raw_string.encode('UTF-8'))
     # Add salt
@@ -45,8 +43,7 @@ def to_encrypt(raw_string, salt):
     return string_hashed.hexdigest()
 
 
-def produce_salt(a, b):
-
+def generate_salt(a, b):
     """
     Generate a random salt.
     :param a:
@@ -69,16 +66,15 @@ def main():
     print('string_hashed2:', string_hashed2.hexdigest())
     print('Is string1 == string2?', string_hashed1.hexdigest() == string_hashed2.hexdigest())
     print('=' * 36)
-    salt = produce_salt(0, 1)
-    string_encrypted = to_encrypt(raw_string, salt)
-    string_hashed_encrypted = to_encrypt(raw_string, salt)
+    salt = generate_salt(0, 1)
+    string_encrypted = encrypt_password(raw_string, salt)
+    string_hashed_encrypted = encrypt_password(raw_string, salt)
     print(f'salt: {salt}')
     print('string_hashed1:', string_hashed1.hexdigest())
     print('string_encrypted:', string_encrypted)
     print('Is raw_string1 == string_encrypted?', string_hashed1.hexdigest() == string_hashed_encrypted)
 
     print('\n=== RSA ===')
-
 
 
 if __name__ == '__main__':
