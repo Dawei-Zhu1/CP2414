@@ -8,23 +8,6 @@ By Zhu Dawei
 """
 import random
 import hashlib
-import rsa
-
-
-# private_key, public_key = rsa.newkeys(16)
-
-def to_encrypt_rsa(raw_string: str, public_key):
-    """To have the string encrypted with RSA
-
-    Args:
-        raw_string (str): An original string
-
-    Returns:
-        tuple: cipher text, public key, and private key
-    """
-
-    cipher_string = rsa.encrypt(raw_string.encode(), public_key)
-    return cipher_string
 
 
 def encrypt_password(raw_string, salt):
