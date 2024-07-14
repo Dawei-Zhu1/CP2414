@@ -10,9 +10,7 @@ import random
 import hashlib
 import rsa
 
-private_key, public_key = rsa.newkeys(16)
-print(private_key, public_key)
-
+# private_key, public_key = rsa.newkeys(16)
 
 def to_encrypt_rsa(raw_string: str, public_key):
     """To have the string encrypted with RSA
