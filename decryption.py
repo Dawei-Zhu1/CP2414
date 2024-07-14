@@ -7,9 +7,9 @@ CP2414 - W03 Task5
 By Zhu Dawei
 """
 import hashlib
-from W03_task1 import generate_random_string
-from W03_task2 import get_valid_input, is_valid_password
-from W03_task4 import to_encrypt
+from password_generator import generate_random_string
+from input_checking import get_valid_input, is_valid_password
+from encryption import to_encrypt
 import random
 
 

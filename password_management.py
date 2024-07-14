@@ -2,11 +2,11 @@
 This python program is a collection of previous tasks to build a password manage system.
 By Zhu Dawei
 """
-from W03_task1 import generate_valid_password
-from W03_task2 import get_valid_input, get_valid_password
-from W03_task3 import read_user_database, save_user_database
-from W03_task4 import to_encrypt, produce_salt
-from W03_task5 import to_verify
+from password_generator import generate_valid_password
+from input_checking import get_valid_input, get_valid_password
+from file_process import read_user_database, save_user_database
+from encryption import to_encrypt, produce_salt
+from decryption import to_verify
 # Use json module to turn python dictionary into a widely-used data format
 import json
 
