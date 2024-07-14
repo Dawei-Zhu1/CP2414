@@ -6,3 +6,6 @@
 *.iml
 out
 gen
+
+# Password json file
+user_database.json
