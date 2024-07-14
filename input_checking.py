@@ -60,13 +60,11 @@ def is_valid_password(
 
     # re.findall(r'[0-9]', password) returns a list of objects that are digits
     is_with_digit: bool = (len(re.findall(r'[0-9]', password)) >= LEAST_DIGIT_NUMBER)
-    if require_numbers and not is_with_digit:
-        print(f'- Require at least {LEAST_DIGIT_NUMBER} d1git')
 
     # re.findall(f'[{SPECIAL_CHARS}]', password) returns a list of objects that are with special characters
     is_with_special_chars: bool = (len(re.findall(f'[{SPECIAL_CHARS}]', password)) >= LEAST_SPECIAL_CHAR_NUMBER)
     # Give feedback of a bad password
-    is_valid = (
+    is_valid: bool = (
             is_good_length and is_with_uppercase and is_with_lowercase and is_with_digit and is_with_special_chars
     )
 
@@ -83,6 +81,9 @@ def is_valid_password(
 
         if require_lowercase and not is_with_lowercase:
             print(f'- Require at least {LEAST_LOWERCASE_NUMBER} lowercase letter')
+
+        if require_numbers and not is_with_digit:
+            print(f'- Require at least {LEAST_DIGIT_NUMBER} d1git')
 
         if require_special_chars and not is_with_special_chars:
             print(f'- Require at least {LEAST_SPECIAL_CHAR_NUMBER} $pec!al ch@racter')

@@ -8,6 +8,7 @@ By Zhu Dawei
 """
 import random
 import string
+from input_checking import is_valid_password
 
 # Set the string length limits as constants, with which you can adjust them easily
 MINIMUM_LENGTH = 8
@@ -24,7 +25,7 @@ def generate_valid_password() -> str:
     :return:
     """
     _password = generate_random_string()
-    while not is_valid_password(_password):
+    while not is_valid_password(_password, print_errors=False):
         # Re-generate random text
         _password = generate_random_string()
     return _password
@@ -53,31 +54,6 @@ def generate_a_character() -> str:
     """
     # Use random choice to randomly select one character from the given string/sequence
     return random.choice(USABLE_CHARS)
-
-
-def is_valid_password(password: str) -> bool:
-    """Determine whether the provided password is valid."""
-    # Counters record the amount of certain characters
-    count_lower = 0
-    count_upper = 0
-    count_digit = 0
-    count_special = 0
-    # Count the upper, lower, digit, specials
-    for char in password:
-        # Count special characters
-        if char in string.punctuation:
-            # (count_special += 1) is equivalent to (count_special = count_special + 1)
-            count_special += 1
-        # Check whether the password has any lowercase letters
-        count_lower += char.islower()
-        # Check whether the password has any uppercase letters
-        count_upper += char.isupper()
-        # Check whether the password has any numbers
-        count_digit += char.isdigit()
-    # Return True if all requirements are fulfilled, which indicates the given password is valid
-    # If one of them is 0 (lack of one of them), then return False
-    # In python, 0, empty string '', empty list, none, etc. can be turned in to False
-    return bool(count_lower and count_upper and count_digit and count_special)
 
 
 def repeat_main(number: int) -> None:
