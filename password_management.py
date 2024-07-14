@@ -66,12 +66,13 @@ def main():
                 user_database = json.load(f)
             # Ask user to input username and password
             username = get_valid_input('Enter your username: ')
-            password_for_verification = get_valid_input('Enter your password: ')
+            entered_password = get_valid_input('Enter your password: ')
             # Check whether the username exists in database records
             if username in user_database:
+                # Get salt from record then encrypt the entered password
                 record = user_database[username]
-                decrypted_password = decrypt_password(record['password'], record['salt'])
-                if decrypted_password == password_for_verification:
+                password_to_verify = encrypt_password(entered_password, record['salt'])
+                if record['password'] == password_to_verify:
                     print(f'Welcome, {username}')
                 else:
                     print('Login failed,')
