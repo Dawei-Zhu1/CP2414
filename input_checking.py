@@ -43,6 +43,7 @@ def is_valid_password(
         require_lowercase: bool = LEAST_LOWERCASE_NUMBER,
         require_special_chars: int = LEAST_SPECIAL_CHAR_NUMBER,
         require_numbers: bool = LEAST_DIGIT_NUMBER,
+        print_errors: bool = False
 ) -> bool:
     """
     Determine whether the provided password is valid.
@@ -69,7 +70,7 @@ def is_valid_password(
             is_good_length and is_with_uppercase and is_with_lowercase and is_with_digit and is_with_special_chars
     )
 
-    if not is_valid:
+    if print_errors and not is_valid:
         # Show password length issue
         if not is_good_length:
             if len(password) < MINIMUM_LENGTH:
