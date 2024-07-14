@@ -55,7 +55,7 @@ def main():
             # Encryption
             salt = generate_salt(0, 15)
             password = encrypt_password(password_for_checking, salt)
-            user_database[username] = [password, salt]  # Put this record into database
+            user_database[username] = {'password': password, 'salt': salt}  # Put this record into database
             # The record is in the dictionary {username: [password, salt]}
             # Save the database
             save_user_database(USER_DATABASE_DIRECTORY, user_database)
@@ -70,10 +70,8 @@ def main():
             # Check whether the username exists in database records
             if username in user_database:
                 record = user_database[username]
-                actual_password = record[0]
-                salt = record[1]
-                decrypted_password = decrypt_password(password_for_verification, salt)
-                if decrypted_password == actual_password:
+                decrypted_password = decrypt_password(record['password'], record['salt'])
+                if decrypted_password == password_for_verification:
                     print(f'Welcome, {username}')
                 else:
                     print('Login failed,')
