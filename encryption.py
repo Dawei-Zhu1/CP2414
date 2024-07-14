@@ -6,6 +6,7 @@ CP2414 - Task 4
 
 By Zhu Dawei
 """
+import random
 
 # Printable character Info - Google Ascii Code for reference
 PRINTABLE_CODE_BEGIN = 33
@@ -27,6 +28,13 @@ def encrypt_password(raw_string, offset):
         # Encrypt uppercase characters in plain text
         result += chr((ord(char) + _offset - PRINTABLE_CODE_BEGIN) % CHARACTER_QUANTITY + PRINTABLE_CODE_BEGIN)
     return result
+
+
+def generate_offset() -> int:
+    """
+    Generate a random offset.
+    """
+    return random.randint(PRINTABLE_CODE_BEGIN, PRINTABLE_CODE_END)
 
 
 def main():
