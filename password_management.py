@@ -6,7 +6,8 @@ from password_generator import generate_valid_password
 from input_checking import get_valid_input, get_valid_password
 from file_process import read_user_database, save_user_database
 from encryption import encrypt_password, generate_salt
-from decryption import decrypt_password
+# from decryption import decrypt_password
+
 # Use json module to turn python dictionary into a widely-used data format
 import json
 
