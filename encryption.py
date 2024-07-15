@@ -13,7 +13,7 @@ from Crypto.Util.Padding import pad, unpad
 from input_checking import MAXIMUM_LENGTH
 
 
-def encrypt_password(data: str, key: bytes) -> bytes:
+def encrypt_password(data: str, key: bytes or str) -> bytes:
     """
     To get a string encrypted with the sha256 and salt.
     :param data: Password to encrypt.
@@ -22,7 +22,12 @@ def encrypt_password(data: str, key: bytes) -> bytes:
     """
     cipher = DES.new(key, DES.MODE_ECB)
     cipher_size = set_block_size(MAXIMUM_LENGTH)
-    cipher_text = cipher.encrypt(pad(data.encode('utf-8'), 24))
+    cipher_text = cipher.encrypt(
+        pad(
+            data.encode('utf-8'),
+            cipher_size
+        )
+    )
     return cipher_text
 
 

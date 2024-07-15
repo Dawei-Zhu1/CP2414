@@ -29,15 +29,6 @@ def decrypt_password(raw_string, salt):
 def main():
     """Demonstration of the module."""
     password_for_test = 'Hello'
-    print('password_for_test:', password_for_test)
-    string_hashed = hashlib.sha256(password_for_test.encode('UTF-8'))
-    salt = random.uniform(0, 1)
-    string_hashed.update(str(salt).encode())
-    password = string_hashed.hexdigest()
-
-    text = input('Input this password or try something else: ')
-    string_hashed2 = verify_password(text, salt)
-    print(string_hashed2 == password)
 
 
 if __name__ == '__main__':
