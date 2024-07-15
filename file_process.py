@@ -44,9 +44,20 @@ def save_user_database(directory: str, user_database: dict) -> None:
         print('Unable to save the user database.')
 
 
-def save_password_to_file(directory: str, content: str or bytes) -> None:
-    with open(directory, 'w') as f:
-        f.write(content)
+def save_password_to_file(directory: str, password: str or bytes) -> None:
+    """
+    Save password to file in byte.
+    """
+    with open(directory, 'wb') as f:
+        f.write(password)
+
+
+def read_password_from_file(directory: str) -> str or bytes:
+    """
+    Read password from file in byte.
+    """
+    with open(directory, 'rb') as f:
+        return f.read()
 
 
 def main():
