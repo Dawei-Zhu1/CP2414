@@ -31,7 +31,7 @@ def generate_valid_password() -> str:
     return _password
 
 
-def generate_random_string() -> str:
+def generate_random_string(length: int = 8) -> str:
     # The type name str in the function declaration part is used to indicate
     # that this function will have a string as return value
     """
@@ -39,9 +39,9 @@ def generate_random_string() -> str:
     :return str: A random string.
     """
     # Generate length of a random integer between the constants of string length limit
-    length = random.randint(MINIMUM_LENGTH, MAXIMUM_LENGTH)
+    _length = length
     text = ''  # Initialize an empty string
-    for i in range(length):
+    for i in range(_length):
         text += generate_a_character()  # Append the random character to local variable: text
         # text = text + generate_a_character()  # They are equivalent
     return text
