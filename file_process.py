@@ -7,6 +7,7 @@ By Zhu Dawei
 """
 import json
 
+DIRECTORY = 'USER_PASSWORD'
 FILENAME = 'task3.txt'
 
 
@@ -43,9 +44,22 @@ def save_user_database(directory: str, user_database: dict) -> None:
         print('Unable to save the user database.')
 
 
+def save_password_to_file(directory: str, content: str or bytes) -> None:
+    with open(directory, 'w') as f:
+        f.write(content)
+
+
 def main():
     """Demonstration of the module."""
-    save_user_database(FILENAME, dict())
+    # save_user_database(FILENAME, dict())
+    # print(a.decode('ascii'))
+    directory = '/'.join((DIRECTORY, FILENAME))
+    with open(directory, 'wb') as f:
+        f.write(b'M9n\x1dzD\xe1\x02\x91\xe8#x\xcf\xcf\xa5\x97\x91\xe8#x\xcf\xcf\xa5\x97')
+
+    with open(directory, 'rb') as f:
+        line = f.readline()
+        print(line.__repr__(), type(line))
 
 
 if __name__ == '__main__':
