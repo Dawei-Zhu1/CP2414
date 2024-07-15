@@ -9,3 +9,4 @@ gen
 
 # Password json file
 user_database.json
+*.pwd
