@@ -6,24 +6,22 @@ CP2414 - W03 Task5
 
 By Zhu Dawei
 """
-import hashlib
 from password_generator import generate_random_string
-from input_checking import get_valid_input, is_valid_password
-from encryption import encrypt_password
-import random
+from encryption import *
 
 
-def decrypt_password(raw_string, salt):
+def decrypt_password(raw_string, key):
     """
     To get a string encrypted with the sha256 and salt.
-    :param raw_string:
-    :param salt:
+    :param raw_string: Encrypted password
+    :param key: salt
+    :param block_size: Block size in n * 8.
     :return:
     """
-    string_hashed = hashlib.sha256(raw_string.encode('UTF-8'))
-    # Add salt
-    string_hashed.update(str(salt).encode())
-    return string_hashed.hexdigest()
+    cipher = DES.new(key, DES.MODE_ECB)
+    _block_size = len(raw_string)
+    decrypted_password = cipher.decrypt(raw_string)
+    return unpad(decrypted_password, _block_size)
 
 
 def main():

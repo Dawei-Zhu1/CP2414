@@ -8,19 +8,22 @@ By Zhu Dawei
 """
 import random
 import math
-from Crypto.Cipher import DES, AES
+from Crypto.Cipher import DES
 from Crypto.Util.Padding import pad, unpad
 from input_checking import MAXIMUM_LENGTH
+from decryption import *
 
 
-def encrypt_password(data: str, key: bytes or str) -> bytes:
+def encrypt_password(data: str, key: bytes or str, block_size: int = MAXIMUM_LENGTH) -> bytes:
     """
     To get a string encrypted with the sha256 and salt.
     :param data: Password to encrypt.
     :param key: Salt.
+    :param block_size: Block size, multiple 8s.
     :return: The encrypted password.
     """
-    cipher = DES.new(key, DES.MODE_ECB)
+    _key = bytes(key.encode('utf-8')) if type(key) is str else key
+    cipher = DES.new(_key, DES.MODE_ECB)
     cipher_size = set_block_size(MAXIMUM_LENGTH)
     cipher_text = cipher.encrypt(
         pad(
@@ -51,13 +54,10 @@ def set_block_size(password_length: int) -> int:
 def main():
     key = b'12345678'
     text = 'Helloooo'
-    cipher = DES.new(key, DES.MODE_ECB)
     cipher_text = encrypt_password(text, key)
-    print(cipher_text)
-    decrypted = unpad(
-        cipher.decrypt(cipher_text),
-        set_block_size(MAXIMUM_LENGTH)
-    )
+    print(cipher_text, len(cipher_text))
+    cipher = DES.new(key, DES.MODE_ECB)
+    decrypted = decrypt_password(cipher_text, key)
     print(decrypted, DES.block_size * 3)
 
 

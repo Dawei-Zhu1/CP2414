@@ -19,7 +19,7 @@ MAXIMUM_LENGTH = 20
 USABLE_CHARS = string.printable.strip()
 
 
-def generate_valid_password() -> bytes:
+def generate_valid_password() -> str:
     """
     Generate a random string until it meets requirements to be a password.
     :return:
@@ -28,7 +28,7 @@ def generate_valid_password() -> bytes:
     while not is_valid_password(_password, print_errors=False):
         # Re-generate random text
         _password = generate_random_string()
-    return bytes(_password.encode())
+    return _password
 
 
 def generate_random_string(length: int = 8) -> str:
