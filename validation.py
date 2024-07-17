@@ -6,11 +6,10 @@ CP2414 - W03 Task5
 
 By Zhu Dawei
 """
-from password_generator import generate_random_string
 from encryption import *
 
 
-def decrypt_password(raw_string, key, cipher_text):
+def validate_password(raw_string, key, cipher_text):
     """
     To get a string encrypted with the sha256 and salt.
     :param raw_string: Encrypted password

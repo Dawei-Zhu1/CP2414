@@ -59,7 +59,7 @@ def main():
     cipher_text = encrypt_password(text, key)
     print(cipher_text, len(cipher_text))
     cipher = DES.new(key, DES.MODE_ECB)
-    decrypted = decrypt_password(cipher_text, key)
+    decrypted = validate_password(cipher_text, key)
     print(decrypted, DES.block_size * 3)
 
 
