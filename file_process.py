@@ -48,7 +48,7 @@ def save_password_to_file(directory: str, password: str or bytes) -> None:
     """
     Save password to file in byte.
     """
-    with open(directory, 'wb') as f:
+    with open(directory, 'w') as f:
         f.write(password)
 
 
@@ -65,12 +65,26 @@ def main():
     # save_user_database(FILENAME, dict())
     # print(a.decode('ascii'))
     directory = '/'.join((DIRECTORY, FILENAME))
-    with open(directory, 'wb') as f:
-        f.write(b'M9n\x1dzD\xe1\x02\x91\xe8#x\xcf\xcf\xa5\x97\x91\xe8#x\xcf\xcf\xa5\x97')
+    database = {
+        'Test': {
+            'a': {
+                'password': b'b\xa2d\xd1\x07\x8b\x0e\xdb\xb0\x8e\xcf\xf0b@\xc7\x8a\xb0\x8e\xcf\xf0b@\xc7\x8a',
+                'key': 'G}\'%EN"z'
+            }
+        }
+    }
+    # with open(directory, 'wb') as f:
+    #     f.write(b'M9n\x1dzD\xe1\x02\x91\xe8#x\xcf\xcf\xa5\x97\x91\xe8#x\xcf\xcf\xa5\x97')
+    #
+    # with open(directory, 'rb') as f:
+    #     line = f.readline()
+    #     print(line.__repr__(), type(line))
+    # save_user_database('testdb.json', database)
 
-    with open(directory, 'rb') as f:
-        line = f.readline()
-        print(line.__repr__(), type(line))
+    a = database['Test']['a']['password']
+    a_hex = a.hex()
+    print(bytes(8).hex())
+    print(bytes.fromhex(a_hex))
 
 
 if __name__ == '__main__':

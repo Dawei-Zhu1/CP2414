@@ -13,8 +13,7 @@ import json
 
 # import rsa
 
-USER_DATABASE_DIRECTORY = 'USER_PASSWORD'
-USER_PASSWORD_INDEX_NAME = 'user_password.json'
+USER_DATABASE_DIRECTORY = 'user_password_database.json'
 # Code to input
 CHOICE_QUIT = '0'
 CHOICE_REGISTER = '1'
@@ -59,10 +58,10 @@ class PasswordManagement:
         """
         # Set username
         username = get_valid_input('Enter your username: ')
-        courtesy_password = generate_valid_password()  # Password of suggestion
         print(f'Hello {username}')
 
         # Password - setting / suggestion
+        courtesy_password = generate_valid_password()  # Password of suggestion
         print(f'Our suggestion for your password:\n{courtesy_password}')
         accept_suggestion = input('Do you want to use this password? (Y/n) ')
         if accept_suggestion.upper() == 'Y':  # If user wants to use the courtesy password
@@ -73,9 +72,8 @@ class PasswordManagement:
         # Encryption
         salt = generate_random_string(8)
         encrypted_password = encrypt_password(data=raw_password, key=salt)
-        password_directory = '/'.join([USER_DATABASE_DIRECTORY, f'{username}.pwd'])
-        save_password_to_file(password_directory, encrypted_password)
-        with open(password_directory, 'wb+') as f:
+        save_password_to_file(USER_DATABASE_DIRECTORY, encrypted_password)
+        with open(USER_DATABASE_DIRECTORY, 'w+') as f:
             f.write(encrypted_password)
         self.user_database[username] = {'password': encrypted_password, 'key': salt}  # Put this record into database
         print(self.user_database)

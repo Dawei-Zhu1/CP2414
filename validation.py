@@ -10,12 +10,12 @@ from password_generator import generate_random_string
 from encryption import *
 
 
-def decrypt_password(raw_string, key):
+def decrypt_password(raw_string, key, cipher_text):
     """
     To get a string encrypted with the sha256 and salt.
     :param raw_string: Encrypted password
     :param key: salt
-    :param block_size: Block size in n * 8.
+    :param cipher_text: Encrypted password in database
     :return:
     """
     cipher = DES.new(key, DES.MODE_ECB)

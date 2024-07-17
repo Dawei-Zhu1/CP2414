@@ -5,22 +5,24 @@ CP2414 - Task 4
 - Implement a one-way hash function with hashlib
 
 By Zhu Dawei
+
+Use DES then transform to hex.
 """
 import random
 import math
 from Crypto.Cipher import DES
 from Crypto.Util.Padding import pad, unpad
 from input_checking import MAXIMUM_LENGTH
-from decryption import *
+from validation import *
 
 
-def encrypt_password(data: str, key: bytes or str, block_size: int = MAXIMUM_LENGTH) -> bytes:
+def encrypt_password(data: str, key: bytes or str, block_size: int = MAXIMUM_LENGTH) -> str:
     """
     To get a string encrypted with the sha256 and salt.
     :param data: Password to encrypt.
     :param key: Salt.
     :param block_size: Block size, multiple 8s.
-    :return: The encrypted password.
+    :return: The encrypted password in hex.
     """
     _key = bytes(key.encode('utf-8')) if type(key) is str else key
     cipher = DES.new(_key, DES.MODE_ECB)
@@ -31,7 +33,7 @@ def encrypt_password(data: str, key: bytes or str, block_size: int = MAXIMUM_LEN
             cipher_size
         )
     )
-    return cipher_text
+    return cipher_text.hex()
 
 
 def generate_salt(a, b):
