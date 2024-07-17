@@ -7,9 +7,6 @@ from input_checking import get_valid_input, get_valid_password
 from file_process import read_user_database, save_user_database, save_password_to_file
 from encryption import *
 
-# Use json module to turn python dictionary into a widely-used data format
-import json
-
 USER_DATABASE_DIRECTORY = 'user_password_database.json'
 # Code to input
 CHOICE_QUIT = '0'
@@ -71,7 +68,8 @@ class PasswordManagement:
         encrypted_password = encrypt_password(data=raw_password, key=salt)
         with open(USER_DATABASE_DIRECTORY, 'w+') as f:
             f.write(encrypted_password)
-        self.password_database[username] = {'password': encrypted_password, 'key': salt}  # Put this record into database
+        self.password_database[username] = {'password': encrypted_password,
+                                            'key': salt}  # Put this record into database
         # The record is in the dictionary {username: [password, key]}
 
         # Save the database
