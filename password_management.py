@@ -72,12 +72,11 @@ class PasswordManagement:
         with open(USER_DATABASE_DIRECTORY, 'w+') as f:
             f.write(encrypted_password)
         self.password_database[username] = {'password': encrypted_password, 'key': salt}  # Put this record into database
-        print(self.password_database)
         # The record is in the dictionary {username: [password, key]}
 
         # Save the database
         save_user_database(USER_DATABASE_DIRECTORY, self.password_database)
-        print(f'Thank you, {username}! Your account has been created successfully.')
+        print(f'Thank you, {username}! Your account has been added to database successfully.')
 
     def login(self) -> None:
         """
