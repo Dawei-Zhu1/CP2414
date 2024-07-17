@@ -43,9 +43,9 @@ class PasswordManagement:
         choice = get_valid_input('Type your option number: ')
         while choice is not CHOICE_QUIT:
             if choice is CHOICE_REGISTER:
-                self.to_register()
+                self.register()
             elif choice is CHOICE_LOGIN:
-                self.to_login()
+                self.login()
             elif choice is CHOICE_CHECK_ACCOUNTS:
                 self.show_accounts()
             else:
@@ -53,7 +53,7 @@ class PasswordManagement:
             # Loop restarts here
             choice = get_valid_input('Type your option number: ')
 
-    def to_register(self):
+    def register(self):
         # Set username
         username = get_valid_input('Enter your username: ')
         courtesy_password = generate_valid_password()  # Password of suggestion
@@ -82,7 +82,7 @@ class PasswordManagement:
         # save_user_database(USER_DATABASE_DIRECTORY, user_database)
         # print(f'Thank you, {username}! Your account has been created successfully.')
 
-    def to_login(self):
+    def login(self):
         # Ask user to input username and password
         username = get_valid_input('Enter your username: ')
         entered_password = get_valid_input('Enter your password: ')
