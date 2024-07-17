@@ -37,7 +37,7 @@ class PasswordManagement:
         self.user_database = read_user_database('user_database.json')
         pass
 
-    def main(self):
+    def main(self) -> None:
         print('Welcome!')
         show_menu()
         choice = get_valid_input('Type your option number: ')
@@ -53,7 +53,10 @@ class PasswordManagement:
             # Loop restarts here
             choice = get_valid_input('Type your option number: ')
 
-    def register(self):
+    def register(self) -> None:
+        """
+        Register a new user
+        """
         # Set username
         username = get_valid_input('Enter your username: ')
         courtesy_password = generate_valid_password()  # Password of suggestion
@@ -63,18 +66,18 @@ class PasswordManagement:
         print(f'Our suggestion for your password:\n{courtesy_password}')
         accept_suggestion = input('Do you want to use this password? (Y/n) ')
         if accept_suggestion.upper() == 'Y':  # If user wants to use the courtesy password
-            password_for_checking = courtesy_password
+            raw_password = courtesy_password
         else:  # Else set password by themselves
-            password_for_checking = get_valid_password()
+            raw_password = get_valid_password()
 
         # Encryption
         salt = generate_random_string(8)
-        password = encrypt_password(data=password_for_checking, key=salt)
+        encrypted_password = encrypt_password(data=raw_password, key=salt)
         password_directory = '/'.join([USER_DATABASE_DIRECTORY, f'{username}.pwd'])
-        save_password_to_file(password_directory, password)
+        save_password_to_file(password_directory, encrypted_password)
         with open(password_directory, 'wb+') as f:
-            f.write(password)
-        self.user_database[username] = {'password': password, 'key': salt}  # Put this record into database
+            f.write(encrypted_password)
+        self.user_database[username] = {'password': encrypted_password, 'key': salt}  # Put this record into database
         print(self.user_database)
         # The record is in the dictionary {username: [password, key]}
 
@@ -82,7 +85,10 @@ class PasswordManagement:
         # save_user_database(USER_DATABASE_DIRECTORY, user_database)
         # print(f'Thank you, {username}! Your account has been created successfully.')
 
-    def login(self):
+    def login(self) -> None:
+        """
+        User login procedure.
+        """
         # Ask user to input username and password
         username = get_valid_input('Enter your username: ')
         entered_password = get_valid_input('Enter your password: ')
@@ -98,7 +104,10 @@ class PasswordManagement:
         else:
             print('Your account does not exist.')
 
-    def show_accounts(self):
+    def show_accounts(self) -> None:
+        """
+        Display all user accounts'
+        """
         account_count = len(self.user_database)
         print(f'There are {account_count} accounts available:')
         for username in self.user_database:
