@@ -56,16 +56,6 @@ def generate_a_character() -> str:
     return random.choice(USABLE_CHARS)
 
 
-def repeat_main(number: int) -> None:
-    """
-    This is a function that repeats the main function of the program for testing purposes
-    :param number:
-    :return: None
-    """
-    for i in range(number):
-        main()
-
-
 def main():
     """Demonstration of the module."""
     # help(string)  # Run this to see what is in the string module
@@ -75,4 +65,3 @@ def main():
 
 if __name__ == '__main__':  # This part will not be executed when it runs as a module
     main()
-    # repeat_main(20)
