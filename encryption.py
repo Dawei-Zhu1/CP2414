@@ -11,7 +11,7 @@ Use DES then transform to hex.
 import random
 import math
 from Crypto.Cipher import DES
-from Crypto.Util.Padding import pad, unpad
+from Crypto.Util.Padding import pad
 from input_checking import MAXIMUM_LENGTH
 
 
