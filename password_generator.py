@@ -47,13 +47,23 @@ def generate_random_string(length: int = 8) -> str:
     return text
 
 
-def generate_a_character() -> str:
+def generate_a_character(type: str = '') -> str:
     """
     Generate a random character.
     :return: a character.
     """
     # Use random choice to randomly select one character from the given string/sequence
-    return random.choice(USABLE_CHARS)
+    if type == 'upper':
+        return random.choice(string.ascii_uppercase)
+    elif type == 'lower':
+        return random.choice(string.ascii_lowercase)
+    elif type == 'number':
+        return random.choice(string.digits)
+    elif type == 'symbol':
+        return random.choice(string.punctuation)
+    else:
+        # Return random
+        return random.choice(USABLE_CHARS)
 
 
 def main():
