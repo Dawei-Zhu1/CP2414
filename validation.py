@@ -17,7 +17,10 @@ def validate_password(raw_string, key, cipher_text):
     :param cipher_text: Encrypted password in database
     :return:
     """
-    cipher = DES.new(key, DES.MODE_ECB)
+    password_to_be_verified = raw_string
+    stored_password = cipher_text
+    _key = key
+    cipher = DES.new(_key, DES.MODE_ECB)
     _block_size = len(raw_string)
     decrypted_password = cipher.decrypt(raw_string)
     return unpad(decrypted_password, _block_size)
