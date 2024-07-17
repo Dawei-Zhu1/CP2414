@@ -6,12 +6,9 @@ from password_generator import generate_valid_password, generate_random_string
 from input_checking import get_valid_input, get_valid_password
 from file_process import read_user_database, save_user_database, save_password_to_file
 from encryption import *
-# from decryption import decrypt_password
-from operator import attrgetter
+
 # Use json module to turn python dictionary into a widely-used data format
 import json
-
-# import rsa
 
 USER_DATABASE_DIRECTORY = 'user_password_database.json'
 # Code to input
@@ -33,7 +30,7 @@ def show_menu() -> None:
 
 class PasswordManagement:
     def __init__(self):
-        self.user_database = read_user_database('user_database.json')
+        self.password_database = read_user_database('user_database.json')
         pass
 
     def main(self) -> None:
@@ -72,16 +69,15 @@ class PasswordManagement:
         # Encryption
         salt = generate_random_string(8)
         encrypted_password = encrypt_password(data=raw_password, key=salt)
-        save_password_to_file(USER_DATABASE_DIRECTORY, encrypted_password)
         with open(USER_DATABASE_DIRECTORY, 'w+') as f:
             f.write(encrypted_password)
-        self.user_database[username] = {'password': encrypted_password, 'key': salt}  # Put this record into database
-        print(self.user_database)
+        self.password_database[username] = {'password': encrypted_password, 'key': salt}  # Put this record into database
+        print(self.password_database)
         # The record is in the dictionary {username: [password, key]}
 
         # Save the database
-        # save_user_database(USER_DATABASE_DIRECTORY, user_database)
-        # print(f'Thank you, {username}! Your account has been created successfully.')
+        save_user_database(USER_DATABASE_DIRECTORY, self.password_database)
+        print(f'Thank you, {username}! Your account has been created successfully.')
 
     def login(self) -> None:
         """
@@ -91,11 +87,10 @@ class PasswordManagement:
         username = get_valid_input('Enter your username: ')
         entered_password = get_valid_input('Enter your password: ')
         # Check whether the username exists in database records
-        if username in self.user_database:
+        if username in self.password_database:
             # Get salt from record then encrypt the entered password
-            record = self.user_database[username]
-            password_to_verify = encrypt_password(entered_password, record['key'])
-            if record['password'] == password_to_verify:
+            record = self.password_database[username]
+            if validate_password(entered_password, record['key'], record['password']):
                 print(f'Welcome, {username}')
             else:
                 print('Login failed,')
@@ -106,9 +101,9 @@ class PasswordManagement:
         """
         Display all user accounts'
         """
-        account_count = len(self.user_database)
+        account_count = len(self.password_database)
         print(f'There are {account_count} accounts available:')
-        for username in self.user_database:
+        for username in self.password_database:
             print(username)
 
 
