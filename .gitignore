@@ -8,5 +8,5 @@ out
 gen
 
 # Password json file
-user_database.json
+user_password_database.json
 *.pwd
