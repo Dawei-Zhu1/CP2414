@@ -8,6 +8,8 @@ By Zhu Dawei
 
 Use rsa then transform byte to hex.
 """
+import typing
+
 import rsa
 
 
@@ -29,16 +31,17 @@ def encrypt_password(message: any, key: rsa.PublicKey) -> str:
     """
 
     _key = key
-    _message = bytes(message.encode('utf-8'))
+    _message = bytes(message.encode())
     cipher_text = rsa.encrypt(_message, _key)
     return cipher_text.hex()
 
 
-def export_key(key: rsa.PrivateKey) -> str:
+def export_key(key: rsa.key) -> any:
     """
     Transform a rsa private key into a string.
     """
-    return key.save_pkcs1().decode()
+    _key = key
+    return _key.save_pkcs1().decode()
 
 
 def import_key(key_string: str) -> any:
@@ -50,6 +53,8 @@ def import_key(key_string: str) -> any:
         return rsa.PrivateKey.load_pkcs1(_key)
     elif b'PUBLIC KEY' in _key:
         return rsa.PublicKey.load_pkcs1(_key)
+    else:
+        raise ValueError(f'Invalid key string')
 
 
 def validate_password(raw_string: str, key: str, stored_password: str) -> bool:
@@ -61,21 +66,18 @@ def validate_password(raw_string: str, key: str, stored_password: str) -> bool:
     :return: Comparison between encrypted password and stored password
     """
     password_to_be_verified = raw_string
-    _stored_password = stored_password
+    _stored_password = bytes.fromhex(stored_password)
     _key = import_key(key)
-    # Encrypt the raw string
-    cipher_text_to_be_verified = encrypt_password(password_to_be_verified, _key)
-    return cipher_text_to_be_verified == _stored_password
+    cipher_text_to_be_verified = rsa.decrypt(_stored_password, _key).decode()
+    return cipher_text_to_be_verified == password_to_be_verified
 
 
 def main():
-    key_public, key_private = rsa.newkeys(1024)
-    text = b'Hellooo'
-    cipher = encrypt_password(text, key_public)
-    print(cipher)
-    a = export_key(key_private)
-    print(a)
-    print(import_key(a))
+    key_public, key_private = rsa.newkeys(512)
+    text = 'Hellooo0'
+    cipher1 = encrypt_password(text, key_public)
+    print(rsa.decrypt(bytes.fromhex(cipher1), key_private))
+    print(validate_password(text, key_private.save_pkcs1().decode(), cipher1))
 
 
 if __name__ == '__main__':
