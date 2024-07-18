@@ -27,7 +27,7 @@ def show_menu() -> None:
 
 class PasswordManagement:
     def __init__(self):
-        self.password_database = read_user_database('user_database.json')
+        self.password_database = read_user_database(USER_DATABASE_DIRECTORY)
         pass
 
     def main(self) -> None:
@@ -64,13 +64,12 @@ class PasswordManagement:
             raw_password = get_valid_password()
 
         # Encryption
-        salt = generate_random_string(8)
-        encrypted_password = encrypt_password(data=raw_password, key=salt)
-        with open(USER_DATABASE_DIRECTORY, 'w+') as f:
-            f.write(encrypted_password)
-        self.password_database[username] = {'password': encrypted_password,
-                                            'key': salt}  # Put this record into database
-        # The record is in the dictionary {username: [password, key]}
+        public_key, private_key = generate_keys(1024)
+        encrypted_password = encrypt_password(data=raw_password, key=public_key)
+        public_key_to_save = export_key(private_key)
+        self.password_database[username] = {
+            'password': encrypted_password, 'key': public_key_to_save
+        }  # Put this record into database
 
         # Save the database
         save_user_database(USER_DATABASE_DIRECTORY, self.password_database)
