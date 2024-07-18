@@ -11,6 +11,15 @@ Use rsa then transform byte to hex.
 import rsa
 
 
+def generate_keys(a: int) -> (rsa.PrivateKey, rsa.PublicKey):
+    """
+    Generate a random salt.
+    :param a: length of key
+    :return:
+    """
+    return rsa.newkeys(a)
+
+
 def encrypt_password(data: any, key: rsa.PublicKey) -> str:
     """
     To get a string encrypted with the sha256 and salt.
@@ -24,16 +33,25 @@ def encrypt_password(data: any, key: rsa.PublicKey) -> str:
     return cipher_text.hex()
 
 
-def generate_keys(a: int) -> (rsa.PrivateKey, rsa.PublicKey):
+def export_key(key: rsa.PrivateKey) -> str:
     """
-    Generate a random salt.
-    :param a: length of key
-    :return:
+    Transform a rsa private key into a string.
     """
-    return rsa.newkeys(a)
+    return key.save_pkcs1().decode()
 
 
-def validate_password(raw_string: str, key: rsa.PublicKey, stored_password: str) -> bool:
+def import_key(key_string: str) -> any:
+    """
+    Import a rsa private key string.
+    """
+    _key = bytes(key_string.encode())
+    if b'PRIVATE KEY' in _key:
+        return rsa.PrivateKey.load_pkcs1(_key)
+    elif b'PUBLIC KEY' in _key:
+        return rsa.PublicKey.load_pkcs1(_key)
+
+
+def validate_password(raw_string: str, key: str, stored_password: str) -> bool:
     """
     To get a string encrypted with the sha256 and salt.
     :param raw_string: Encrypted password
@@ -43,7 +61,7 @@ def validate_password(raw_string: str, key: rsa.PublicKey, stored_password: str)
     """
     password_to_be_verified = raw_string
     _stored_password = stored_password
-    _key = key
+    _key = rsa.PrivateKey.load_pkcs1(bytes(key))
     # Encrypt the raw string
     cipher_text_to_be_verified = encrypt_password(password_to_be_verified, key)
     return cipher_text_to_be_verified == _stored_password
@@ -52,15 +70,11 @@ def validate_password(raw_string: str, key: rsa.PublicKey, stored_password: str)
 def main():
     key_public, key_private = rsa.newkeys(1024)
     text = b'Hellooo'
-    cipher = rsa.encrypt(text, key_public)
-    cipher_hex = cipher.hex()
-    print(key_private)
-    kp = key_private.save_pkcs1().hex()
-    d = bytes.fromhex(cipher_hex)
-    print(d)
-    kp2 = bytes.fromhex(kp)
-    kpp = rsa.PrivateKey.load_pkcs1(kp2)
-    print(kpp)
+    cipher = encrypt_password(text, key_public)
+    print(cipher)
+    a = export_key(key_private)
+    print(a)
+    print(import_key(a))
 
 
 if __name__ == '__main__':
