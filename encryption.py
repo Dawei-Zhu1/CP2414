@@ -59,9 +59,10 @@ def import_key(key_string: str) -> any:
 
 def validate_password(raw_string: str, key: str, stored_password: str) -> bool:
     """
-    To get a string encrypted with the sha256 and salt.
+    To get a string encrypted with rsa.
+    When using rsa, same message will have different ciphers even with the same public key.
     :param raw_string: Encrypted password
-    :param key: salt
+    :param key: Private key.
     :param stored_password: Encrypted password in database
     :return: Comparison between encrypted password and stored password
     """
