@@ -6,50 +6,34 @@ CP2414 - Task 4
 
 By Zhu Dawei
 
-Use DES then transform to hex.
+Use rsa then transform byte to hex.
 """
 import random
 import math
-from Crypto.Cipher import DES
-from Crypto.Util.Padding import pad
-from input_checking import MAXIMUM_LENGTH
+import rsa
 
 
-def encrypt_password(data: str, key: bytes or str, block_size: int = MAXIMUM_LENGTH) -> str:
+def encrypt_password(data: str or bytes, key: bytes) -> str:
     """
     To get a string encrypted with the sha256 and salt.
     :param data: Password to encrypt.
-    :param key: Salt.
-    :param block_size: Block size, multiple 8s.
+    :param key: rsa key.
     :return: The encrypted password in hex.
     """
-    _key = bytes(key.encode('utf-8')) if type(key) is str else key
-    cipher = DES.new(_key, DES.MODE_ECB)
-    cipher_size = set_block_size(MAXIMUM_LENGTH)
-    cipher_text = cipher.encrypt(
-        pad(
-            data.encode('utf-8'),
-            cipher_size
-        )
-    )
-    return cipher_text.hex()
+    _key = key
+    cipher = rsa.newkeys(512)[0]
+    cipher_text = ''
+    return cipher_text
 
 
-def generate_salt(a, b):
+def generate_keys(a: int) -> (rsa.PrivateKey, rsa.PublicKey):
     """
     Generate a random salt.
     :param a: Salt minimum.
     :param b: Salt maximum.
     :return:
     """
-    return random.uniform(a, b)
-
-
-def set_block_size(password_length: int) -> int:
-    """
-    Set block size with password length.
-    """
-    return math.ceil(password_length / 8) * DES.block_size
+    return rsa.newkeys(a)
 
 
 def validate_password(raw_string: str, key: str or bytes, stored_password: str) -> bool:
@@ -70,10 +54,17 @@ def validate_password(raw_string: str, key: str or bytes, stored_password: str) 
 
 
 def main():
-    key = b'12345678'
-    text = 'Helloooo'
-    cipher_text = encrypt_password(text, key)
-    print(cipher_text, len(cipher_text))
+    key_public, key_private = rsa.newkeys(1024)
+    text = b'Hellooo'
+    cipher = rsa.encrypt(text, key_public)
+    cipher_hex = cipher.hex()
+    print(key_private)
+    kp = key_private.save_pkcs1().hex()
+    d = bytes.fromhex(cipher_hex)
+    print(d)
+    kp2 = bytes.fromhex(kp)
+    kpp = rsa.PrivateKey.load_pkcs1(kp2)
+    print(kpp)
 
 
 if __name__ == '__main__':
