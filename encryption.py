@@ -61,7 +61,7 @@ def validate_password(raw_string: str, key: str, stored_password: str) -> bool:
     """
     password_to_be_verified = raw_string
     _stored_password = stored_password
-    _key = rsa.PrivateKey.load_pkcs1(bytes(key))
+    _key = import_key(key)
     # Encrypt the raw string
     cipher_text_to_be_verified = encrypt_password(password_to_be_verified, key)
     return cipher_text_to_be_verified == _stored_password
