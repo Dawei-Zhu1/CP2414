@@ -11,7 +11,7 @@ Use rsa then transform byte to hex.
 
 import rsa
 import hashlib
-import random
+from password_generator import generate_random_string
 
 
 def generate_keys(a: int) -> (rsa.PrivateKey, rsa.PublicKey):
@@ -83,16 +83,20 @@ def import_key(key_string: str) -> any:
         raise ValueError(f'Invalid key string')
 
 
-def validate_password(raw_string: str, key: str, stored_password: str) -> bool:
+def validate_password(
+        raw_string: str, salt,
+        key: str, stored_password: str
+) -> bool:
     """
     To get a string encrypted with rsa.
     When using rsa, same message will have different ciphers even with the same public key.
     :param raw_string: Encrypted password
     :param key: Private key.
+    :param salt: Salt used in hash  .
     :param stored_password: Encrypted password in database
     :return: Comparison between encrypted password and stored password
     """
-    password_to_be_verified = raw_string
+    password_to_be_verified = hash_password(raw_string, salt)
     _stored_password = bytes.fromhex(stored_password)
     _key = import_key(key)
     cipher_text_to_be_verified = rsa.decrypt(_stored_password, _key).decode()
@@ -100,11 +104,17 @@ def validate_password(raw_string: str, key: str, stored_password: str) -> bool:
 
 
 def main():
-    key_public, key_private = rsa.newkeys(512)
+    key_public, key_private = rsa.newkeys(1440)
+
     text = 'Hellooo0'
-    cipher1 = encrypt_password(text, key_public)
+    salt = generate_random_string()
+    hashed_password = hash_password(text, salt)
+    print(hashed_password)
+
+    cipher1 = encrypt_password(hashed_password, key_public)
     print(rsa.decrypt(bytes.fromhex(cipher1), key_private))
-    print(validate_password(text, key_private.save_pkcs1().decode(), cipher1))
+    print(f'Text: {text}')
+    print(validate_password(text, salt, key_private.save_pkcs1().decode(), cipher1))
 
 
 if __name__ == '__main__':
