@@ -8,7 +8,7 @@ from file_process import read_user_database, save_user_database, save_password_t
 from encryption import *
 
 USER_DATABASE_DIRECTORY = 'user_password_database.json'
-RSA_KEY_LENGTH = 1024
+RSA_KEY_LENGTH = 1536
 
 # Code to input
 CHOICE_QUIT = '0'

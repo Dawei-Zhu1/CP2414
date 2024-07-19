@@ -104,7 +104,7 @@ def validate_password(
 
 
 def main():
-    key_public, key_private = rsa.newkeys(1440)
+    key_public, key_private = rsa.newkeys(1536)
 
     text = 'Hellooo0'
     salt = generate_random_string()
