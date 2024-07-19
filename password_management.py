@@ -67,13 +67,16 @@ class PasswordManagement:
 
         # Encryption
         public_key, private_key = generate_keys(RSA_KEY_LENGTH)
-        generate_salt(1, 512)
-        encrypted_password = encrypt_password(message=raw_password, key=public_key)
+        # Hash Password
+        salt = generate_random_string()
+        hashed_password = hash_password(raw_password, salt)
+        encrypted_password = encrypt_password(message=hashed_password, key=public_key)
         public_key_to_save = export_key(public_key)
         private_key_to_save = export_key(private_key)
         self.password_database[username] = {
             'public_key': public_key_to_save,
             'private_key': private_key_to_save,
+            'salt': salt,
             'password': encrypted_password
         }  # Put this record into database
 
@@ -92,7 +95,12 @@ class PasswordManagement:
         if username in self.password_database:
             # Get salt from record then encrypt the entered password
             record = self.password_database[username]
-            if validate_password(entered_password, record['private_key'], record['password']):
+            if validate_password(
+                    raw_string=entered_password,
+                    salt=record['salt'],
+                    key=record['private_key'],
+                    stored_password=record['password']
+            ):
                 print(f'Welcome, {username}')
             else:
                 print('Login failed,')
