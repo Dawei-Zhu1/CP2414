@@ -8,9 +8,10 @@ By Zhu Dawei
 
 Use rsa then transform byte to hex.
 """
-import typing
 
 import rsa
+import hashlib
+import random
 
 
 def generate_keys(a: int) -> (rsa.PrivateKey, rsa.PublicKey):
@@ -20,6 +21,31 @@ def generate_keys(a: int) -> (rsa.PrivateKey, rsa.PublicKey):
     :return:
     """
     return rsa.newkeys(a)
+
+
+def hash_password(raw_string, salt):
+    """
+    To get a string encrypted with the sha256 and salt.
+    :param raw_string:
+    :param salt:
+    :return:
+    """
+    # salt = produce_salt(0, 1)
+    string_hashed = hashlib.sha512(raw_string.encode('UTF-8'))
+    # Add salt
+    # According to python handbook, (string_hashed.update) == (string_hashed(raw_string + salt))
+    string_hashed.update(str(salt).encode())
+    return string_hashed.hexdigest()
+
+
+def generate_salt(a, b):
+    """
+    Generate a random salt.
+    :param a:
+    :param b:
+    :return:
+    """
+    return random.uniform(a, b)
 
 
 def encrypt_password(message: any, key: rsa.PublicKey) -> str:
