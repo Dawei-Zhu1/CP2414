@@ -38,16 +38,6 @@ def hash_password(raw_string, salt):
     return string_hashed.hexdigest()
 
 
-def generate_salt(a, b):
-    """
-    Generate a random salt.
-    :param a:
-    :param b:
-    :return:
-    """
-    return random.uniform(a, b)
-
-
 def encrypt_password(message: any, key: rsa.PublicKey) -> str:
     """
     To get a string encrypted with the sha256 and salt.
