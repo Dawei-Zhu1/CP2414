@@ -8,6 +8,8 @@ from file_process import read_user_database, save_user_database, save_password_t
 from encryption import *
 
 USER_DATABASE_DIRECTORY = 'user_password_database.json'
+RSA_KEY_LENGTH = 1024
+
 # Code to input
 CHOICE_QUIT = '0'
 CHOICE_REGISTER = '1'
@@ -64,7 +66,8 @@ class PasswordManagement:
             raw_password = get_valid_password()
 
         # Encryption
-        public_key, private_key = generate_keys(1024)
+        public_key, private_key = generate_keys(RSA_KEY_LENGTH)
+        generate_salt(1, 512)
         encrypted_password = encrypt_password(message=raw_password, key=public_key)
         public_key_to_save = export_key(public_key)
         private_key_to_save = export_key(private_key)
