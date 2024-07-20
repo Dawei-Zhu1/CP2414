@@ -53,14 +53,14 @@ class FacialRecognition:
         self.known_face_encodings.append(_face_encoding)
         self.known_face_names.append(os.path.splitext(_name_of_face)[0])
 
-    def recognize_face(self):
+    def recognize_face(self, person_to_validate) -> bool:
         # Initialize some variables
         face_locations = []
         face_encodings = []
         face_names = []
         process_this_frame = True
-        is_quit_key_pressed = False
-        while not is_quit_key_pressed:
+        is_time_to_quit = False
+        while not is_time_to_quit:
             # Grab a single frame of video
             ret, frame = self.video_capture.read()
 
@@ -95,6 +95,10 @@ class FacialRecognition:
 
                     face_names.append(name)
 
+                    if name == person_to_validate:
+                        is_time_to_quit = True
+                        return True
+
             process_this_frame = not process_this_frame
 
             # Display the results
@@ -118,7 +122,7 @@ class FacialRecognition:
 
             # Hit 'q' on the keyboard to quit!
             if cv2.waitKey(1) & 0xFF == ord('q'):
-                is_quit_key_pressed = True
+                is_time_to_quit = True
 
         # Release handle to the webcam
         self.video_capture.release()

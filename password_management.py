@@ -105,12 +105,13 @@ class PasswordManagement:
         if username in self.password_database:
             # Get salt from record then encrypt the entered password
             record = self.password_database[username]
+            program = facial_recognition.FacialRecognition(FACES_DIRECTORY)
             if validate_password(
                     raw_string=entered_password,
                     salt=record['salt'],
                     key=record['private_key'],
                     stored_password=record['password']
-            ):
+            ) and program.recognize_face(username):
                 print(f'Welcome, {username}')
             else:
                 print('Login failed,')
