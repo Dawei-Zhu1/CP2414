@@ -2,11 +2,17 @@
 This python program is a collection of previous tasks to build a password manage system.
 By Zhu Dawei
 """
+import os.path
+import shutil
+
 from password_generator import generate_valid_password, generate_random_string
 from input_checking import get_valid_input, get_valid_password
 from file_process import read_user_database, save_user_database, save_password_to_file
 from encryption import *
 
+import facial_recognition
+
+FACES_DIRECTORY = 'data/faces'
 USER_DATABASE_DIRECTORY = 'user_password_database.json'
 RSA_KEY_LENGTH = 1536
 
@@ -64,6 +70,10 @@ class PasswordManagement:
             raw_password = courtesy_password
         else:  # Else set password by themselves
             raw_password = get_valid_password()
+        # Ask for photo
+        photo_directory = facial_recognition.input_photo()
+        photo_extension = os.path.splitext(photo_directory)[1]
+        shutil.copy2(photo_directory, os.path.join(FACES_DIRECTORY, username + photo_extension))
 
         # Encryption
         public_key, private_key = generate_keys(RSA_KEY_LENGTH)

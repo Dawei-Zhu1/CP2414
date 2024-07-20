@@ -7,8 +7,6 @@ import glob
 import tkinter as tk
 from tkinter import filedialog
 
-import shutil
-
 
 class FacialRecognition:
     """
@@ -34,6 +32,7 @@ class FacialRecognition:
         self.known_face_encodings = list()
         self.known_face_names = list()
         self.current_working_directory = os.getcwd()
+        # self.faces_on_screen = list()
         if directory_of_faces:
             self.train_faces(directory_of_faces)
 
@@ -127,21 +126,20 @@ class FacialRecognition:
 
 
 def input_photo() -> str:
+    """
+    Prompt a dialog to select photo
+    """
     root = tk.Tk()
     root.withdraw()
     file_path = filedialog.askopenfilename()
+    while not file_path:
+        file_path = filedialog.askopenfilename()
     return file_path
 
 
-def copy_photo(src, dst) -> None:
-    print()
-
-
 def main():
-    cwd = os.getcwd()
-    folder_of_faces = os.path.join(cwd, 'data/faces')
+    folder_of_faces = 'data/faces'
     # src_directory = input_photo()
-    # shutil.copy2(src_directory, folder_of_faces)
     program = FacialRecognition(folder_of_faces)
 
     program.recognize_face()
