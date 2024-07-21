@@ -16,6 +16,33 @@ from tkinter import ttk
 PADDING = 10
 LABEL_WIDTH = 10
 
+core = PasswordManagement()
+
+
+class Main:
+    def __init__(self):
+        self.root = tk.Tk()
+        HomeView(self.root)
+        self.root.mainloop()
+
+
+class View:
+    def __init__(self, master: tk.Tk, title='', geometry='400x200'):
+        master.title(title)
+        master.geometry(geometry)
+
+
+class HomeView(View):
+    def __init__(self, master: tk.ttk) -> None:
+        super().__init__(master)
+        self.master = master
+        self.master.title('Password Management UI - Home Page')
+
+        tk.Frame(master).pack(anchor=tk.CENTER, padx=PADDING, pady=15)
+        tk.Button(text='Login', width=10, command=new_login_window).pack()
+        tk.Button(text='Register', width=10, command=new_register_window).pack()
+        tk.Button(text='Show Accounts', width=10, command=new_show_accounts).pack()
+
 
 class Row(tk.Frame):
     """
@@ -140,20 +167,24 @@ class ButtonFrame(tk.Frame):
         self.btn_submit.config(command=submit)
 
 
-class HomeView:
+class ShowAccountsView(View):
     def __init__(self, master: tk.ttk) -> None:
+        super().__init__(master)
+        master.title('Password Management UI - Show Accounts Page')
         self.master = master
-        self.master.title('Password Management UI - Home Page')
-        self.master.geometry('400x200')
+        self.accounts = tk.Frame(self.master)
+        self.accounts.pack(side=tk.TOP)
+        self.display_accounts()
 
-        tk.Frame(master).pack(anchor=tk.CENTER, padx=PADDING, pady=15)
-        tk.Button(text='Login', width=10, command=new_login_window).pack()
-        tk.Button(text='Register', width=10, command=new_register_window).pack()
-        tk.Button(text='Show Accounts', width=10).pack()
+    def display_accounts(self):
+        accounts = core.get_accounts()
+        tk.Label(self.accounts, text=f'There are {len(accounts)} accounts').pack(side=tk.TOP)
+        for account in accounts:
+            tk.Label(self.accounts, text=account).pack()
 
 
 def new_login_window() -> None:
-    create_new_window(RegisterView)
+    create_new_window(LoginView)
 
 
 def new_register_window() -> None:
@@ -161,15 +192,14 @@ def new_register_window() -> None:
 
 
 def new_show_accounts() -> None:
-    create_new_window()
+    create_new_window(ShowAccountsView)
 
 
-class RegisterView:
+class RegisterView(View):
     def __init__(self, master: ttk) -> None:
+        super().__init__(master)
         master.title('Register')
-
         self.master = master
-        self.core = PasswordManagement()
         self.form = Form(self.master)
         # self._frame.pack(side=tk.TOP, fill=tk.BOTH, expand=False, padx=PADDING, pady=PADDING)
         self.button_frame = ButtonFrame(self.master)
@@ -181,23 +211,28 @@ class RegisterView:
         self.form.set_random_password()
 
 
+class LoginView:
+    def __init__(self, master: ttk) -> None:
+        master.title('Login')
+        master.geometry('400x200')
+        self.master = master
+
+        self.frame = tk.Frame(self.master)
+        self.frame.pack(side=tk.TOP)
+
+        self.username = Row(self.frame, 'Username')
+        self.password = Row(self.frame, 'Password')
+
+        tk.Button(self.frame, text='Login', width=10).pack()
+
+
 def create_new_window(new_page_class: callable) -> None:
     new_window = tk.Toplevel()
     new_page_class(new_window)
-    new_window.title('New')
-    new_window.geometry('200x300')
-
-
-def encapsulate(root: tk.Tk) -> None:
-    # PasswordManagementUI(root)
-    HomeView(root)
 
 
 def main():
-    root = tk.Tk()
-    encapsulate(root)
-    # create_new_window(root)
-    root.mainloop()
+    Main()
 
 
 if __name__ == '__main__':

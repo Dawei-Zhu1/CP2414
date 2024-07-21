@@ -48,7 +48,7 @@ class PasswordManagement:
             elif choice is CHOICE_LOGIN:
                 self.login()
             elif choice is CHOICE_CHECK_ACCOUNTS:
-                self.show_accounts()
+                self.get_accounts()
             else:
                 print('Invalid option. Please try again.')
             # Loop restarts here
@@ -118,7 +118,7 @@ class PasswordManagement:
         else:
             print('Your account does not exist.')
 
-    def show_accounts(self) -> None:
+    def get_accounts(self) -> list:
         """
         Display all user accounts'
         """
@@ -126,6 +126,7 @@ class PasswordManagement:
         print(f'There are {account_count} accounts available:')
         for username in self.password_database:
             print(username)
+        return list(self.password_database.keys())
 
 
 def main():
