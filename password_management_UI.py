@@ -64,7 +64,11 @@ class Form(tk.Frame):
             i.clear()
 
     def submit_form(self) -> dict:
-        return {"name": self.name, "password": self.password, "photo": self.photo_directory}
+        issue = ''
+        name = self.name.get().strip()
+        password = self.password.get().strip()
+        photo_directory = self.photo_directory.get()
+        return {"name": name, "password": password, "photo": photo_directory}
 
 
 class ButtonFrame(tk.Frame):
@@ -85,9 +89,18 @@ class ButtonFrame(tk.Frame):
         self.btn_submit.config(command=submit)
 
 
+class WelcomeFrame(tk.ttk):
+    def __init__(self, master: tk.ttk, **kwargs):
+        super().__init__(master, **kwargs)
+        self.master = master
+        master.title('Password Management UI')
+
+        # self.button_frame = ButtonFrame(master)
+
+
 class PasswordManagementUI:
     def __init__(self, master: ttk) -> None:
-        master.title('Password Management UI')
+        master.title('Register')
 
         self.master = master
         self.core = PasswordManagement()
