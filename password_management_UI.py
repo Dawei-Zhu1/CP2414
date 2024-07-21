@@ -79,6 +79,12 @@ class Row(tk.Frame):
         return self.entry.get()
 
 
+class PasswordRow(Row):
+    def __init__(self, master: tk.Frame, label, **kwargs):
+        super().__init__(master, label, **kwargs)
+        self.entry.config(show='*')
+
+
 class RowForPhoto(Row):
     def __init__(self, master: tk.Frame, label, **kwargs):
         super().__init__(master, label, **kwargs)
@@ -216,8 +222,8 @@ class LoginView(View):
         self.frame = tk.Frame(self.master)
         self.frame.pack(side=tk.TOP)
         self.username = Row(self.frame, 'Username')
-        self.password = Row(self.frame, 'Password')
-        self.password.entry.config(show='*')
+        self.password = PasswordRow(self.frame, 'Password')
+        # self.password.entry.config(show='*')
 
         tk.Button(self.frame, text='Login', width=10, command=self.login).pack()
 
@@ -242,8 +248,8 @@ class LoginView(View):
                 program = facial_recognition.FacialRecognition(FACES_DIRECTORY)
                 if program.recognize_face(username):
                     tk.messagebox.showinfo('Welcome', f'Welcome, {username}')
-                else:
-                    tk.messagebox.showinfo('Error', 'Login failed')
+        else:
+            tk.messagebox.showinfo('Error', 'Login failed')
 
 
 def new_login_window() -> None:
