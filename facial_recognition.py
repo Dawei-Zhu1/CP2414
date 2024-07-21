@@ -95,7 +95,7 @@ class FacialRecognition:
 
                     face_names.append(name)
 
-                    if name == person_to_validate:
+                    if person_to_validate in face_names:
                         is_time_to_quit = True
                         return True
 
@@ -118,7 +118,7 @@ class FacialRecognition:
                 cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
 
             # Display the resulting image
-            cv2.imshow('Video', frame)
+            cv2.imshow('Face Recognition', frame)
 
             # Hit 'q' on the keyboard to quit!
             if cv2.waitKey(1) & 0xFF == ord('q'):
