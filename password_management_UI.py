@@ -55,8 +55,6 @@ class Form(tk.Frame):
         self.password = Row(self._master, 'Password')
         self.photo_directory = Row(self._master, 'Your photo')
 
-        self.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-
     def clear_form(self):
         for i in [
             self.name,
@@ -65,21 +63,22 @@ class Form(tk.Frame):
         ]:
             i.clear()
 
+    def submit_form(self) -> dict:
+        return {"name": self.name, "password": self.password, "photo": self.photo_directory}
+
 
 class ButtonFrame(tk.Frame):
     def __init__(self, master: tk.Frame, **kwargs):
         super().__init__(master, **kwargs)
         self.master = master
-        self.frame = tk.Frame(self)
-        # self._frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.frame = tk.Frame(self, padx=PADDING, pady=PADDING)
+        self.frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         self.btn_clear = tk.Button(text='Clear')
         self.btn_clear.pack(side=tk.LEFT)
 
         self.btn_submit = tk.Button(text='Submit')
         self.btn_submit.pack(side=tk.LEFT)
-
-        self.pack()
 
     def set_callback(self, clear: callable, submit: callable):
         self.btn_clear.config(command=clear)
@@ -90,14 +89,15 @@ class PasswordManagementUI:
     def __init__(self, master: ttk) -> None:
         master.title('Password Management UI')
 
-        self._master = master
-        self._core = PasswordManagement()
-        self._frame = Form(self._master)
-        self._button_frame = ButtonFrame(self._master)
+        self.master = master
+        self.core = PasswordManagement()
+        self.frame = Form(self.master)
+        # self._frame.pack(side=tk.TOP, fill=tk.BOTH, expand=False, padx=PADDING, pady=PADDING)
+        self.button_frame = ButtonFrame(self.master)
 
-        self._button_frame.set_callback(
-            clear=self._frame.clear_form,
-            submit=lambda _: self._frame.clear_form
+        self.button_frame.set_callback(
+            clear=self.frame.clear_form,
+            submit=self.frame.submit_form
         )
 
 
