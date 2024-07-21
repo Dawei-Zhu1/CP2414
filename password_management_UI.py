@@ -219,7 +219,7 @@ class RegisterView(View):
         self.form.set_random_password()
 
 
-class LoginView:
+class LoginView(View):
     def __init__(self, master: ttk) -> None:
         master.title('Login')
         master.geometry('400x200')
