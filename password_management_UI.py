@@ -60,6 +60,7 @@ class RowForPhoto(Row):
     def select_photo(self):
         photo_direction = facial_recognition.input_photo()
         if photo_direction:
+            # If there is any thing in the box, it will not be emptied.
             self.entry.delete(0, tk.END)
         self.entry.insert(0, photo_direction)
 
