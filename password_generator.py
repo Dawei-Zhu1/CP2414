@@ -25,7 +25,7 @@ def generate_valid_password() -> str:
     :return:
     """
     _password = generate_random_string()
-    while not is_valid_password(_password, print_errors=False):
+    while not is_valid_password(_password, print_errors=False)[0]:
         # Re-generate random text
         _password = generate_random_string()
     return _password

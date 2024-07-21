@@ -5,6 +5,7 @@ By Zhu Dawei
 import os.path
 import shutil
 
+import input_checking
 import password_management
 from password_management import *
 
@@ -128,10 +129,17 @@ class Form(tk.Frame):
         # Empty
         if not name:
             messagebox.showerror('Name Error', 'Name cannot be empty!')
+            return False
         elif not password:
             messagebox.showerror('Password Error', 'Password cannot be empty!')
+            return False
         elif not photo_directory:
             messagebox.showerror('Photo Directory Error', 'Photo Directory cannot be empty!')
+            return False
+
+        is_good_password, error_messages = input_checking.is_valid_password(password)
+        if not is_good_password:
+            tk.messagebox.showerror(title='Password Error', message=error_messages)
             return False
 
     def submit_form(self) -> dict:
