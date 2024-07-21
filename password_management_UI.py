@@ -56,14 +56,15 @@ class Form(tk.Frame):
         super().__init__(master, height=100, width=200, **kwargs)
         self._master = master
 
-        self._frame = tk.Frame(self)
-        self._frame.pack(side=tk.TOP)
+        self.frame = tk.Frame(self)
+        self.frame.pack(side=tk.TOP)
 
-        self.name = Row(self._frame, 'Name')
-        self.password = Row(self._frame, 'Password')
-        self.photo_directory = Row(self._frame, 'Your photo')
+        self.name = Row(self.frame, 'Name')
+        self.password = Row(self.frame, 'Password')
+        self.photo_directory = Row(self.frame, 'Your photo')
         self.pack(padx=PADDING, pady=PADDING)
 
+        # Select all when password is selected
         self.password.bind("<FocusIn>", self.select_all)
 
         # Generate a password
@@ -109,14 +110,14 @@ class ButtonFrame(tk.Frame):
     def __init__(self, master: tk.Frame, **kwargs):
         super().__init__(master, **kwargs)
         self.master = master
-        self.frame = tk.Frame(self, padx=PADDING, pady=PADDING)
-        self.frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        self.btn_clear = tk.Button(text='Clear')
+        self.btn_clear = tk.Button(self, text='Clear')
         self.btn_clear.pack(side=tk.LEFT)
 
-        self.btn_submit = tk.Button(text='Submit')
+        self.btn_submit = tk.Button(self, text='Submit')
         self.btn_submit.pack(side=tk.LEFT)
+
+        self.pack()
 
     def set_callback(self, clear: callable, submit: callable):
         self.btn_clear.config(command=clear)
