@@ -140,25 +140,31 @@ class ButtonFrame(tk.Frame):
         self.btn_submit.config(command=submit)
 
 
-class HomePage:
+class HomeView:
     def __init__(self, master: tk.ttk) -> None:
         self.master = master
         self.master.title('Password Management UI - Home Page')
         self.master.geometry('400x200')
 
         tk.Frame(master).pack(anchor=tk.CENTER, padx=PADDING, pady=15)
-        tk.Button(text='Login', width=10, command=create_new_window).pack()
-        tk.Button(text='Register', width=10).pack()
+        tk.Button(text='Login', width=10, command=new_login_window).pack()
+        tk.Button(text='Register', width=10, command=new_register_window).pack()
         tk.Button(text='Show Accounts', width=10).pack()
 
-    def new_login_window(self, event) -> None:
-        create_new_window(self.master, )
 
-    def new_register_window(self, event) -> None:
-        create_new_window(self.master)
+def new_login_window() -> None:
+    create_new_window(RegisterView)
 
 
-class RegisterPage:
+def new_register_window() -> None:
+    create_new_window(RegisterView)
+
+
+def new_show_accounts() -> None:
+    create_new_window()
+
+
+class RegisterView:
     def __init__(self, master: ttk) -> None:
         master.title('Register')
 
@@ -175,16 +181,16 @@ class RegisterPage:
         self.form.set_random_password()
 
 
-def create_new_window(root: tk.Tk) -> None:
-    new_window = tk.Toplevel(root)
-    # new_window = WelcomeFrame(root)
+def create_new_window(new_page_class: callable) -> None:
+    new_window = tk.Toplevel()
+    new_page_class(new_window)
     new_window.title('New')
     new_window.geometry('200x300')
 
 
 def encapsulate(root: tk.Tk) -> None:
     # PasswordManagementUI(root)
-    HomePage(root)
+    HomeView(root)
 
 
 def main():
