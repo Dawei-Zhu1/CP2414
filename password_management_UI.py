@@ -64,6 +64,8 @@ class Form(tk.Frame):
         self.photo_directory = Row(self._frame, 'Your photo')
         self.pack(padx=PADDING, pady=PADDING)
 
+        self.password.bind("<FocusIn>", self.select_all)
+
         # Generate a password
         self.set_random_password()
 
@@ -98,6 +100,9 @@ class Form(tk.Frame):
     def set_random_password(self) -> None:
         password = password_management.generate_valid_password()
         self.password.set(password)
+
+    def select_all(self, event) -> None:
+        self.password.entry.select_range(0, tk.END)
 
 
 class ButtonFrame(tk.Frame):
