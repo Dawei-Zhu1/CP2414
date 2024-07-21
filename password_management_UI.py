@@ -5,6 +5,7 @@ By Zhu Dawei
 import os.path
 import shutil
 
+
 import input_checking
 import password_management
 from password_management import *
@@ -221,8 +222,8 @@ class RegisterView(View):
 
 class LoginView(View):
     def __init__(self, master: ttk) -> None:
+        super().__init__(master)
         master.title('Login')
-        master.geometry('400x200')
         self.master = master
 
         self.frame = tk.Frame(self.master)
@@ -231,7 +232,31 @@ class LoginView(View):
         self.username = Row(self.frame, 'Username')
         self.password = Row(self.frame, 'Password')
 
-        tk.Button(self.frame, text='Login', width=10).pack()
+        tk.Button(self.frame, text='Login', width=10, command=self.login).pack()
+
+    def login(self) -> bool:
+        username = self.username.get()
+        password = self.password.get()
+        if not username:
+            tk.messagebox.showerror('Name Error', 'Name cannot be empty!')
+            return False
+        elif not password:
+            tk.messagebox.showerror('Password Error', 'Password cannot be empty!')
+            return False
+
+        if username in core.password_database:
+            record = core.password_database[username]
+            if validate_password(
+                    raw_string=password,
+                    salt=record['salt'],
+                    key=record['key'],
+                    stored_password=record['password']
+            ):
+                program = facial_recognition.FacialRecognition(FACES_DIRECTORY)
+                if program.recognize_face(username):
+                    print(f'Welcome, {username}')
+                else:
+                    print('Login failed,')
 
 
 def create_new_window(new_page_class: callable) -> None:

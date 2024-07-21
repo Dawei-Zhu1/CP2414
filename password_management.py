@@ -11,6 +11,7 @@ from file_process import read_user_database, save_user_database, save_password_t
 from encryption import *
 
 import facial_recognition
+import cv2
 
 FACES_DIRECTORY = 'data/faces'
 USER_DATABASE_DIRECTORY = 'user_password_database.json'
@@ -111,10 +112,12 @@ class PasswordManagement:
                     salt=record['salt'],
                     key=record['private_key'],
                     stored_password=record['password']
-            ) and program.recognize_face(username):
-                print(f'Welcome, {username}')
-            else:
-                print('Login failed,')
+            ):
+                is_face_match = program.recognize_face(username)
+                if is_face_match:
+                    print(f'Welcome, {username}')
+                else:
+                    print('Login failed,')
         else:
             print('Your account does not exist.')
 

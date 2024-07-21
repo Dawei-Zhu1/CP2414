@@ -60,6 +60,8 @@ class FacialRecognition:
         face_names = []
         process_this_frame = True
         is_time_to_quit = False
+        is_face_match = False
+        cv2.startWindowThread()
         while not is_time_to_quit:
             # Grab a single frame of video
             ret, frame = self.video_capture.read()
@@ -95,9 +97,9 @@ class FacialRecognition:
 
                     face_names.append(name)
 
+                    # Key part
                     if person_to_validate in face_names:
-                        is_time_to_quit = True
-                        return True
+                        is_face_match = True
 
             process_this_frame = not process_this_frame
 
@@ -121,12 +123,14 @@ class FacialRecognition:
             cv2.imshow('Face Recognition', frame)
 
             # Hit 'q' on the keyboard to quit!
-            if cv2.waitKey(1) & 0xFF == ord('q'):
+            if cv2.waitKey(1) & 0xFF == ord('q') or is_face_match:
                 is_time_to_quit = True
+                # Release handle to the webcam
+                self.video_capture.release()
+                cv2.destroyAllWindows()
+                cv2.waitKey(1)
 
-        # Release handle to the webcam
-        self.video_capture.release()
-        cv2.destroyAllWindows()
+        return is_face_match
 
 
 def input_photo() -> str:
@@ -146,14 +150,7 @@ def main():
     # src_directory = input_photo()
     program = FacialRecognition(folder_of_faces)
 
-    # program.recognize_face()
-
-    # root = tk.Tk()
-    # root.withdraw()
-    # print()
-    #
-    # file_path = filedialog.askopenfilename()
-    # print(file_path)
+    program.recognize_face('zdw')
 
 
 if __name__ == '__main__':
