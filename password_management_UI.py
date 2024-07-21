@@ -58,15 +58,19 @@ class Form(tk.Frame):
         self.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
     def clear_form(self):
-        self.name.clear()
-        self.password.clear()
+        for i in [
+            self.name,
+            self.password,
+            self.photo_directory
+        ]:
+            i.clear()
 
 
 class ButtonFrame(tk.Frame):
     def __init__(self, master: tk.Frame, **kwargs):
         super().__init__(master, **kwargs)
-        self._master = master
-        self._frame = tk.Frame(self)
+        self.master = master
+        self.frame = tk.Frame(self)
         # self._frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         self.btn_clear = tk.Button(text='Clear')
