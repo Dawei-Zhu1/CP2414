@@ -5,7 +5,6 @@ By Zhu Dawei
 import os.path
 import shutil
 
-
 import input_checking
 import password_management
 from password_management import *
@@ -56,8 +55,8 @@ class Row(tk.Frame):
         super().__init__(master, **kwargs)
         self.master = master
         self.label = tk.Label(self, text=label, width=LABEL_WIDTH, anchor=tk.W)
-        self.label.pack(side=tk.LEFT)
         self.entry = tk.Entry(self)
+        self.label.pack(side=tk.LEFT)
         self.entry.pack(side=tk.LEFT)
         self.pack()
 
@@ -192,18 +191,6 @@ class ShowAccountsView(View):
             tk.Label(self.accounts, text=account).pack()
 
 
-def new_login_window() -> None:
-    create_new_window(LoginView)
-
-
-def new_register_window() -> None:
-    create_new_window(RegisterView)
-
-
-def new_show_accounts() -> None:
-    create_new_window(ShowAccountsView)
-
-
 class RegisterView(View):
     def __init__(self, master: ttk) -> None:
         super().__init__(master)
@@ -228,9 +215,9 @@ class LoginView(View):
 
         self.frame = tk.Frame(self.master)
         self.frame.pack(side=tk.TOP)
-
         self.username = Row(self.frame, 'Username')
         self.password = Row(self.frame, 'Password')
+        self.password.entry.config(show='*')
 
         tk.Button(self.frame, text='Login', width=10, command=self.login).pack()
 
@@ -254,9 +241,21 @@ class LoginView(View):
             ):
                 program = facial_recognition.FacialRecognition(FACES_DIRECTORY)
                 if program.recognize_face(username):
-                    print(f'Welcome, {username}')
+                    tk.messagebox.showinfo('Welcome', f'Welcome, {username}')
                 else:
-                    print('Login failed,')
+                    tk.messagebox.showinfo('Error', 'Login failed')
+
+
+def new_login_window() -> None:
+    create_new_window(LoginView)
+
+
+def new_register_window() -> None:
+    create_new_window(RegisterView)
+
+
+def new_show_accounts() -> None:
+    create_new_window(ShowAccountsView)
 
 
 def create_new_window(new_page_class: callable) -> None:
