@@ -249,7 +249,7 @@ class LoginView(View):
             if validate_password(
                     raw_string=password,
                     salt=record['salt'],
-                    key=record['key'],
+                    key=record['private_key'],
                     stored_password=record['password']
             ):
                 program = facial_recognition.FacialRecognition(FACES_DIRECTORY)
