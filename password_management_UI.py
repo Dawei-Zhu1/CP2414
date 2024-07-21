@@ -5,10 +5,12 @@ By Zhu Dawei
 import os.path
 import shutil
 
+import password_management
 from password_management import *
 
 import facial_recognition
 import tkinter as tk
+from tkinter import messagebox
 from tkinter import ttk
 
 PADDING = 10
@@ -28,13 +30,19 @@ class Row(tk.Frame):
         self.label.pack(side=tk.LEFT)
         self.entry = tk.Entry(self)
         self.entry.pack(side=tk.LEFT)
-        self.pack(fill=tk.BOTH, expand=True)
+        self.pack()
 
     def clear(self):
         """
         Clear the text box
         """
         self.entry.delete(0, tk.END)
+
+    def set(self, text) -> None:
+        """
+        Set text value
+        """
+        self.entry.insert(0, text)
 
     def get(self):
         """
@@ -49,13 +57,17 @@ class Form(tk.Frame):
         self._master = master
 
         self._frame = tk.Frame(self)
-        self._frame.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self._frame.pack(side=tk.TOP)
 
-        self.name = Row(self._master, 'Name')
-        self.password = Row(self._master, 'Password')
-        self.photo_directory = Row(self._master, 'Your photo')
+        self.name = Row(self._frame, 'Name')
+        self.password = Row(self._frame, 'Password')
+        self.photo_directory = Row(self._frame, 'Your photo')
+        self.pack(padx=PADDING, pady=PADDING)
 
-    def clear_form(self):
+        # Generate a password
+        self.set_random_password()
+
+    def clear_form(self) -> None:
         for i in [
             self.name,
             self.password,
@@ -63,12 +75,29 @@ class Form(tk.Frame):
         ]:
             i.clear()
 
-    def submit_form(self) -> dict:
-        issue = ''
+    def check_input_box(self) -> bool:
         name = self.name.get().strip()
         password = self.password.get().strip()
         photo_directory = self.photo_directory.get()
-        return {"name": name, "password": password, "photo": photo_directory}
+        # Empty
+        if not name:
+            messagebox.showerror('Name Error', 'Name cannot be empty!')
+        elif not password:
+            messagebox.showerror('Password Error', 'Password cannot be empty!')
+        elif not photo_directory:
+            messagebox.showerror('Photo Directory Error', 'Photo Directory cannot be empty!')
+            return False
+
+    def submit_form(self) -> dict:
+        if self.check_input_box():
+            name = self.name.get().strip()
+            password = self.password.get().strip()
+            photo_directory = self.photo_directory.get()
+            return {"name": name, "password": password, "photo": photo_directory}
+
+    def set_random_password(self) -> None:
+        password = password_management.generate_valid_password()
+        self.password.set(password)
 
 
 class ButtonFrame(tk.Frame):
@@ -89,7 +118,7 @@ class ButtonFrame(tk.Frame):
         self.btn_submit.config(command=submit)
 
 
-class WelcomeFrame(tk.ttk):
+class WelcomeFrame():
     def __init__(self, master: tk.ttk, **kwargs):
         super().__init__(master, **kwargs)
         self.master = master
@@ -104,14 +133,15 @@ class PasswordManagementUI:
 
         self.master = master
         self.core = PasswordManagement()
-        self.frame = Form(self.master)
+        self.form = Form(self.master)
         # self._frame.pack(side=tk.TOP, fill=tk.BOTH, expand=False, padx=PADDING, pady=PADDING)
         self.button_frame = ButtonFrame(self.master)
 
         self.button_frame.set_callback(
-            clear=self.frame.clear_form,
-            submit=self.frame.submit_form
+            clear=self.form.clear_form,
+            submit=self.form.submit_form
         )
+        self.form.set_random_password()
 
 
 def encapsulate(root: tk.Tk) -> None:
