@@ -54,8 +54,14 @@ class Row(tk.Frame):
 class RowForPhoto(Row):
     def __init__(self, master: tk.Frame, label, **kwargs):
         super().__init__(master, label, **kwargs)
-        self.select_photo_btn = tk.Button(self, text='Select...')
+        self.select_photo_btn = tk.Button(self, text='...', command=self.select_photo)
         self.select_photo_btn.pack(side=tk.LEFT)
+
+    def select_photo(self):
+        photo_direction = facial_recognition.input_photo()
+        if photo_direction:
+            self.entry.delete(0, tk.END)
+        self.entry.insert(0, photo_direction)
 
 
 class Form(tk.Frame):

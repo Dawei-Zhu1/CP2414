@@ -2,7 +2,7 @@
 This python program is a collection of previous tasks to build a password manage system.
 By Zhu Dawei
 """
-import os.path
+import os
 import shutil
 
 from password_generator import generate_valid_password, generate_random_string

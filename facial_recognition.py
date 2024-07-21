@@ -136,8 +136,8 @@ def input_photo() -> str:
     root = tk.Tk()
     root.withdraw()
     file_path = filedialog.askopenfilename()
-    while not file_path:
-        file_path = filedialog.askopenfilename()
+    # while not file_path:
+    #     file_path = filedialog.askopenfilename()
     return file_path
 
 
@@ -146,7 +146,7 @@ def main():
     # src_directory = input_photo()
     program = FacialRecognition(folder_of_faces)
 
-    program.recognize_face()
+    # program.recognize_face()
 
     # root = tk.Tk()
     # root.withdraw()
