@@ -51,6 +51,13 @@ class Row(tk.Frame):
         return self.entry.get()
 
 
+class RowForPhoto(Row):
+    def __init__(self, master: tk.Frame, label, **kwargs):
+        super().__init__(master, label, **kwargs)
+        self.select_photo_btn = tk.Button(self, text='Select...')
+        self.select_photo_btn.pack(side=tk.LEFT)
+
+
 class Form(tk.Frame):
     def __init__(self, master: tk.Frame, **kwargs):
         super().__init__(master, height=100, width=200, **kwargs)
@@ -61,7 +68,8 @@ class Form(tk.Frame):
 
         self.name = Row(self.frame, 'Name')
         self.password = Row(self.frame, 'Password')
-        self.photo_directory = Row(self.frame, 'Your photo')
+        self.photo_directory = RowForPhoto(self.frame, 'Your photo')
+
         self.pack(padx=PADDING, pady=PADDING)
 
         # Select all when password is selected
@@ -77,6 +85,7 @@ class Form(tk.Frame):
             self.photo_directory
         ]:
             i.clear()
+        self.set_random_password()
 
     def check_input_box(self) -> bool:
         name = self.name.get().strip()
