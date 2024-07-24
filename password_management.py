@@ -37,7 +37,8 @@ def show_menu() -> None:
 class PasswordManagement:
     def __init__(self):
         self.password_database = read_user_database(USER_DATABASE_DIRECTORY)
-        pass
+        if not os.path.exists(FACES_DIRECTORY):
+            os.makedirs(FACES_DIRECTORY)
 
     def main(self) -> None:
         print('Welcome!')
