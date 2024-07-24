@@ -79,7 +79,6 @@ class Row(tk.Frame):
         return self.entry.get()
 
     def blur_password_box(self) -> None:
-        print('1234')
         self.entry.config(show='*')
 
     def unblur_password_box(self) -> None:
@@ -230,6 +229,7 @@ class RegisterView(View):
         _raw_password: str = _register_data['password']
         _photo_directory: str = _register_data['photo']
         photo_extension = os.path.splitext(_photo_directory)[1]
+        # Copy the photo
         shutil.copy2(
             _photo_directory,
             os.path.join(FACES_DIRECTORY, _username + photo_extension)
@@ -288,8 +288,10 @@ class LoginView(View):
                 program = facial_recognition.FacialRecognition(FACES_DIRECTORY)
                 if program.recognize_face(username):
                     tk.messagebox.showinfo('Welcome', f'Welcome, {username}')
+            else:
+                tk.messagebox.showinfo('Error', 'Login failed')
         else:
-            tk.messagebox.showinfo('Error', 'Login failed')
+            tk.messagebox.showinfo('Error', 'No such user')
 
 
 def new_login_window() -> None:
