@@ -113,7 +113,7 @@ class Form(tk.Frame):
         self.frame = tk.Frame(self)
         self.frame.pack(side=tk.TOP)
 
-        self.name = Row(self.frame, 'Name')
+        self.username = Row(self.frame, 'Username')
         self.password = Row(self.frame, 'Password')
         self.photo_directory = RowForPhoto(self.frame, 'Your photo')
 
@@ -122,11 +122,10 @@ class Form(tk.Frame):
         # Select all when password is selected
         self.password.bind('<FocusIn>', self.select_all)
         self.password.entry.bind('<KeyPress>', self.blur_password_box)
-        # self.password.bind('<KeyPress>', self.blur_password_box)
 
     def clear_form(self) -> None:
         for i in [
-            self.name,
+            self.username,
             self.password,
             self.photo_directory
         ]:
@@ -135,32 +134,11 @@ class Form(tk.Frame):
             self.password.unblur_password_box()
         self.set_random_password()
 
-    def check_input_box(self) -> bool:
-        name = self.name.get().strip()
+    def get_form(self) -> dict:
+        username = self.username.get().strip()
         password = self.password.get().strip()
         photo_directory = self.photo_directory.get()
-        # Empty
-        if not name:
-            messagebox.showerror('Name Error', 'Name cannot be empty!')
-            return False
-        elif not password:
-            messagebox.showerror('Password Error', 'Password cannot be empty!')
-            return False
-        elif not photo_directory:
-            messagebox.showerror('Photo Directory Error', 'Photo Directory cannot be empty!')
-            return False
-
-        is_good_password, error_messages = input_checking.is_valid_password(password)
-        if not is_good_password:
-            tk.messagebox.showerror(title='Password Error', message=error_messages)
-            return False
-
-    def get_form(self) -> dict:
-        if self.check_input_box():
-            username = self.name.get().strip()
-            password = self.password.get().strip()
-            photo_directory = self.photo_directory.get()
-            return {"username": username, "password": password, "photo": photo_directory}
+        return {"username": username, "password": password, "photo": photo_directory}
 
     def set_random_password(self) -> None:
         password = password_management.generate_valid_password()
@@ -219,12 +197,41 @@ class RegisterView(View):
 
         self.button_frame.set_callback(
             clear=self.form.clear_form,
-            submit=self.form.get_form
+            submit=self.register
         )
         self.form.set_random_password()
 
+    def get_form(self) -> dict:
+        return self.form.get_form()
+
+    def check_form(self) -> bool:
+        _register_data: dict = self.get_form()
+        username = _register_data['username']
+        password = _register_data['password']
+        photo_directory = _register_data['photo']
+        # Empty
+        if not username:
+            messagebox.showerror('Name Error', 'Name cannot be empty!')
+            return False
+        elif not password:
+            messagebox.showerror('Password Error', 'Password cannot be empty!')
+            return False
+        elif not photo_directory:
+            messagebox.showerror('Photo Directory Error', 'Photo Directory cannot be empty!')
+            return False
+        else:
+            is_good_password, error_messages = input_checking.is_valid_password(password)
+            if not is_good_password:
+                tk.messagebox.showerror(title='Password Error', message=error_messages)
+                return False
+            else:
+                return True
+
     def register(self) -> None:
-        _register_data: dict = self.form.get_form()
+        _register_data: dict = self.get_form()
+        _is_good_data = self.check_form()
+        if not _is_good_data:
+            return
         _username: str = _register_data['username']
         _raw_password: str = _register_data['password']
         _photo_directory: str = _register_data['photo']
