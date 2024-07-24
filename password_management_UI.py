@@ -38,8 +38,8 @@ class HomeView(View):
         super().__init__(master)
         self.master = master
         self.master.title('Password Management UI - Home Page')
-
         tk.Frame(master).pack(anchor=tk.CENTER, padx=PADDING, pady=15)
+        tk.Label(master=master, text='Welcome to Password Manager').pack()
         tk.Button(text='Login', width=10, command=new_login_window).pack()
         tk.Button(text='Register', width=10, command=new_register_window).pack()
         tk.Button(text='Show Accounts', width=10, command=new_show_accounts).pack()
@@ -78,11 +78,18 @@ class Row(tk.Frame):
         """
         return self.entry.get()
 
+    def blur_password_box(self) -> None:
+        print('1234')
+        self.entry.config(show='*')
+
+    def unblur_password_box(self) -> None:
+        self.entry.config(show='')
+
 
 class PasswordRow(Row):
     def __init__(self, master: tk.Frame, label, **kwargs):
         super().__init__(master, label, **kwargs)
-        self.entry.config(show='*')
+        self.blur_password_box()
 
 
 class RowForPhoto(Row):
@@ -114,10 +121,9 @@ class Form(tk.Frame):
         self.pack(padx=PADDING, pady=PADDING)
 
         # Select all when password is selected
-        self.password.bind("<FocusIn>", self.select_all)
-
-        # Generate a password
-        self.set_random_password()
+        self.password.bind('<FocusIn>', self.select_all)
+        self.password.entry.bind('<KeyPress>', self.blur_password_box)
+        # self.password.bind('<KeyPress>', self.blur_password_box)
 
     def clear_form(self) -> None:
         for i in [
@@ -126,6 +132,8 @@ class Form(tk.Frame):
             self.photo_directory
         ]:
             i.clear()
+            # Reveal the password
+            self.password.unblur_password_box()
         self.set_random_password()
 
     def check_input_box(self) -> bool:
@@ -148,12 +156,12 @@ class Form(tk.Frame):
             tk.messagebox.showerror(title='Password Error', message=error_messages)
             return False
 
-    def submit_form(self) -> dict:
+    def get_form(self) -> dict:
         if self.check_input_box():
-            name = self.name.get().strip()
+            username = self.name.get().strip()
             password = self.password.get().strip()
             photo_directory = self.photo_directory.get()
-            return {"name": name, "password": password, "photo": photo_directory}
+            return {"username": username, "password": password, "photo": photo_directory}
 
     def set_random_password(self) -> None:
         password = password_management.generate_valid_password()
@@ -161,6 +169,10 @@ class Form(tk.Frame):
 
     def select_all(self, event) -> None:
         self.password.entry.select_range(0, tk.END)
+
+    def blur_password_box(self, event) -> None:
+        _event = event
+        self.password.blur_password_box()
 
 
 class ButtonFrame(tk.Frame):
@@ -208,9 +220,37 @@ class RegisterView(View):
 
         self.button_frame.set_callback(
             clear=self.form.clear_form,
-            submit=self.form.submit_form
+            submit=self.form.get_form
         )
         self.form.set_random_password()
+
+    def register(self) -> None:
+        _register_data: dict = self.form.get_form()
+        _username: str = _register_data['username']
+        _raw_password: str = _register_data['password']
+        _photo_directory: str = _register_data['photo']
+        photo_extension = os.path.splitext(_photo_directory)[1]
+        shutil.copy2(
+            _photo_directory,
+            os.path.join(FACES_DIRECTORY, _username + photo_extension)
+        )
+        # Encryption
+        public_key, private_key = generate_keys(RSA_KEY_LENGTH)
+        # Hash Password
+        salt = generate_random_string()
+        hashed_password = hash_password(_raw_password, salt)
+        encrypted_password = encrypt_password(message=hashed_password, key=public_key)
+        public_key_to_save = export_key(public_key)
+        private_key_to_save = export_key(private_key)
+        core.password_database[_username] = {
+            'public_key': public_key_to_save,
+            'private_key': private_key_to_save,
+            'salt': salt,
+            'password': encrypted_password
+        }  # Put this record into database
+        # Save the database
+        save_user_database(USER_DATABASE_DIRECTORY, core.password_database)
+        tk.messagebox.showinfo(title='Register Successful', message='Your account has been registered!')
 
 
 class LoginView(View):

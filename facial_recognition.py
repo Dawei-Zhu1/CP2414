@@ -1,3 +1,6 @@
+"""
+NumPy show be downgraded to 1.26.4
+"""
 import face_recognition
 import cv2
 import numpy as np
