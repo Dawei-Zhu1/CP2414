@@ -258,6 +258,7 @@ class RegisterView(View):
         # Save the database
         save_user_database(USER_DATABASE_DIRECTORY, core.password_database)
         tk.messagebox.showinfo(title='Register Successful', message='Your account has been registered!')
+        self.master.destroy()
 
 
 class LoginView(View):
@@ -295,6 +296,7 @@ class LoginView(View):
                 program = facial_recognition.FacialRecognition(FACES_DIRECTORY)
                 if program.recognize_face(username):
                     tk.messagebox.showinfo('Welcome', f'Welcome, {username}')
+                    self.master.destroy()
             else:
                 tk.messagebox.showinfo('Error', 'Login failed')
         else:
