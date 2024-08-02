@@ -38,7 +38,7 @@ def save_user_database(directory: str, user_database: dict) -> None:
     # Error handler if the file is not saved
     try:
         with open(directory, 'w') as f:
-            json.dump(user_database, f)
+            json.dump(user_database, f,indent='\t')
         print('User database has been saved successfully.')
     except IOError:  # If an Input / Output error occurs
         print('Unable to save the user database.')

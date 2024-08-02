@@ -11,7 +11,7 @@ from file_process import read_user_database, save_user_database, save_password_t
 from encryption import *
 
 import facial_recognition
-import cv2
+from pseudorandom import make_digest
 
 FACES_DIRECTORY = 'data/faces'
 USER_DATABASE_DIRECTORY = 'user_password_database.json'
@@ -23,6 +23,7 @@ CHOICE_REGISTER = '1'
 CHOICE_LOGIN = '2'
 CHOICE_CHECK_ACCOUNTS = '3'
 
+KEY = 'Test_Key'
 
 def show_menu() -> None:
     """
@@ -77,17 +78,22 @@ class PasswordManagement:
         shutil.copy2(photo_directory, os.path.join(FACES_DIRECTORY, username + photo_extension))
 
         # Encryption
-        public_key, private_key = generate_keys(RSA_KEY_LENGTH)
+        # public_key, private_key = generate_keys(RSA_KEY_LENGTH)
         # Hash Password
-        salt = generate_random_string()
-        hashed_password = hash_password(raw_password, salt)
-        encrypted_password = encrypt_password(message=hashed_password, key=public_key)
+        key = KEY
+        public_key, private_key = generate_keys(RSA_KEY_LENGTH)
         public_key_to_save = export_key(public_key)
         private_key_to_save = export_key(private_key)
+        message = generate_random_string(16)
+        salt = make_digest(message, key)
+        hashed_password = hash_password(raw_password, salt)
+        encrypted_password = encrypt_password(message=hashed_password, key=public_key)
+        # public_key_to_save = export_key(public_key)
+        # private_key_to_save = export_key(private_key)
         self.password_database[username] = {
+            'salt': salt,
             'public_key': public_key_to_save,
             'private_key': private_key_to_save,
-            'salt': salt,
             'password': encrypted_password
         }  # Put this record into database
 
